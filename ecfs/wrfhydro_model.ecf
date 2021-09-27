@@ -1,0 +1,75 @@
+%include <head.h>
+echo "=== STARTING WRFHYDRO MODEL %WRFHYDRO_CYCLE% ==="
+
+export WRF_HYDRO_ROOT=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/wrfhydro
+mkdir -p $WRF_HYDRO_ROOT
+
+
+if [[ %LENGTH_HRS% < 0 ]]; then
+    cycle_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +%LENGTH_HRS% hours" +%%Y%%m%%d)
+    cycle_time=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +%LENGTH_HRS% hours" +%%H%%M)
+else
+    cycle_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d)
+    cycle_time=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%H%%M)
+fi
+
+cp %ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/params/* $WRF_HYDRO_ROOT
+cp %ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/namelists/%WRFHYDRO_CYCLE%/* $WRF_HYDRO_ROOT
+ln -sf %ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/DOMAIN $WRF_HYDRO_ROOT
+ln -sfn ../../%WRFHYDRO_BASE_CYCLE%/forcings-output/$cycle_date$(echo $cycle_time | cut -c 1-2) $WRF_HYDRO_ROOT/forcing
+ln -sf %MODEL_EXECUTABLE% $WRF_HYDRO_ROOT/wrf_hydro.exe
+
+if [[ "%USE_DA%" == "true" ]]; then
+    # temporary for gauge ingest
+    archive_dir=/glade/p/cisl/nwc/gaydos/nwm/3.0/data/
+    ln -sf $archive_dir/rfc_timeseries $WRF_HYDRO_ROOT/.
+    ln -sf $archive_dir/usgs_timeslices $WRF_HYDRO_ROOT/.
+    ln -sf $archive_dir/usace_timeslices $WRF_HYDRO_ROOT/.
+    mkdir -p $WRF_HYDRO_ROOT/nudgingTimeSliceObs
+    ln -sf $WRF_HYDRO_ROOT/usgs_timeslices/* $WRF_HYDRO_ROOT/nudgingTimeSliceObs/.
+    ln -sf $WRF_HYDRO_ROOT/usace_timeslices/* $WRF_HYDRO_ROOT/nudgingTimeSliceObs/.
+fi
+
+hydro_namelist=$WRF_HYDRO_ROOT/hydro.namelist
+hrldas_namelist=$WRF_HYDRO_ROOT/namelist.hrldas
+
+start_date=$cycle_date
+start_year=${start_date:0:4}
+start_month=${start_date:4:2}
+start_day=${start_date:6:2}
+
+start_time=$cycle_time
+start_hour=${start_time:0:2}
+start_minute=${start_time:2:2}
+
+sed -i "s|^START_YEAR .*|START_YEAR = ${start_year}|;" ${hrldas_namelist}
+sed -i "s|^START_MONTH .*|START_MONTH = ${start_month}|;" ${hrldas_namelist}
+sed -i "s|^START_DAY .*|START_DAY = ${start_day}|;" ${hrldas_namelist}
+sed -i "s|^START_HOUR .*|START_HOUR = ${start_hour}|;" ${hrldas_namelist}
+sed -i "s|^START_MIN .*|START_MIN = ${start_minute}|;" ${hrldas_namelist}
+
+hrldas_restart=RESTART.${start_year}${start_month}${start_day}${start_hour}_DOMAIN1
+hydro_restart=HYDRO_RST.${start_year}-${start_month}-${start_day}_${start_hour}\:00_DOMAIN1
+
+if [[ "%WRFHYDRO_RESTART_CYCLE%" != "" ]]; then
+    cp %ECF_HOME%/jobdir/%WRFHYDRO_DOMAIN%/%WRFHYDRO_RESTART_CYCLE%/wrfhydro/$hrldas_restart $WRF_HYDRO_ROOT
+    cp %ECF_HOME%/jobdir/%WRFHYDRO_DOMAIN%/%WRFHYDRO_RESTART_CYCLE%/wrfhydro/$hydro_restart $WRF_HYDRO_ROOT
+fi
+
+sed -i "s|^RESTART_FILE .*|RESTART_FILE = ${hydro_restart}|;" ${hydro_namelist}
+sed -i "s|^RESTART_FILENAME_REQUESTED .*|RESTART_FILENAME_REQUESTED = ${hrldas_restart}|;" ${hrldas_namelist}
+
+# Uncomment these and comment out two lines above for model cold start
+#sed -i "s|^RESTART_FILE .*|\!RESTART_FILE = ${hydro_restart}|;" ${hydro_namelist}
+#sed -i "s|^RESTART_FILENAME_REQUESTED .*|\!RESTART_FILENAME_REQUESTED = ${hrldas_restart}|;" ${hrldas_namelist}
+
+## change output type to 6 until short-range is updated to include q_lateral
+sed -i "s|^io_config_outputs = .*|io_config_outputs = 6|;" ${hydro_namelist}
+
+# call the model!
+
+cd $WRF_HYDRO_ROOT
+qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l walltime=03:00:00 %ECF_HOME%/wrfhydro/run_wrf_hydro.sh
+
+
+%include <tail.h>

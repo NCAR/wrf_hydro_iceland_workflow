@@ -1,0 +1,48 @@
+%include <head.h>
+
+export FORCING_ROOT_DIR=%ECF_HOME%/forcings
+export FORCING_CONFIG=%WRFHYDRO_DOMAIN%-%WRFHYDRO_CYCLE%
+export FORCING_CONFIGS_DIR=%FORCING_CONFIGS_DIR%
+export FORCING_PARAMS_DIR="%FORCING_PARAMS_DIR%"
+export FORCING_INPUT_DIR="%FORCING_INPUT_DIR%"
+export FORCING_SCRATCH_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-scratch
+export FORCING_OUTPUT_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-output
+export GEOGRID_FILE=%GEOGRID_FILE%
+export SPATIAL_METADATA_FILE=%SPATIAL_METADATA_FILE%
+
+export FORCING_SCRATCH_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-scratch
+export FORCING_OUTPUT_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-output
+
+if [[ %LENGTH_HRS% < 0 ]]; then
+    export FORCING_BEGIN_DATE=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% %LENGTH_HRS% hours" +%%Y%%m%%d%%H%%M)
+    export FORCING_END_DATE=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d%%H%%M)
+else
+    export FORCING_BEGIN_DATE=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d%%H%%M)
+    export FORCING_END_DATE=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +%LENGTH_HRS% hours" +%%Y%%m%%d%%H%%M)
+fi
+
+mkdir -p $FORCING_SCRATCH_DIR
+mkdir -p $FORCING_OUTPUT_DIR
+
+# qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l select=1:ncpus=36:mpiprocs=36 $FORCING_ROOT_DIR/forcings_job.sh
+
+# MOCK FE -- SYMLINK LDASIN FILES FROM ARCHIVE
+cycle_length=%LENGTH_HRS%
+if [[ %LENGTH_HRS% < 0 ]]; then
+  let cycle_length=$cycle_length*-1
+fi
+
+archive_dir=/glade/p/cisl/nwc/gaydos/nwm/3.0/data/forcings/%WRFHYDRO_DOMAIN%/%WRFHYDRO_CYCLE%
+daily_forcings_dir=$FORCING_OUTPUT_DIR/${FORCING_BEGIN_DATE:0:10}
+daily_start_date=$FORCING_BEGIN_DATE
+
+mkdir -p $daily_forcings_dir
+
+for i in $(seq 1 $cycle_length)
+do
+    d=$(date -ud "${daily_start_date:0:8} ${daily_start_date:8} +$i hours" +%%Y%%m%%d%%H%%M)
+    ln -sf $archive_dir/$d.LDASIN_DOMAIN1 $daily_forcings_dir/$d.LDASIN_DOMAIN1
+done
+touch $daily_forcings_dir/WrfHydroForcing.COMPLETE
+
+%include <tail.h>
