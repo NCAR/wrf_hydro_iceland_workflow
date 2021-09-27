@@ -73,3 +73,33 @@ qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l walltime=03:00:00 
 
 
 %include <tail.h>
+
+%manual
+This script runs the WRF-Hydro model for the %WRFHYDRO_DOMAIN% WRF-Hydro %WRFHYDRO_CYCLE% cycle
+for %LENGTH_HRS% hours beginning at %CYCLE_DATE% %CYCLE_TIME% (or ending at this time, if using a negative lookback).
+
+Forcing data is read from
+
+   %WRFHYDRO_JOBDIR%/%WRFHYDRO_BASE_CYCLE%/forcings-output
+
+using namelist templates in
+
+   %ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/namelists/%WRFHYDRO_CYCLE%
+
+and parameter files in
+
+   %ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/params
+
+and domain files in
+
+   %ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/DOMAIN
+
+using restart files for this cycle (analysis only) or from
+
+   %ECF_HOME%/jobdir/%WRFHYDRO_DOMAIN%/%WRFHYDRO_RESTART_CYCLE%/wrfhydro
+
+Output data and restart files are written to
+
+   %WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/wrfhydro
+
+%end

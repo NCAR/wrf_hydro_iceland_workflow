@@ -46,3 +46,27 @@ done
 touch $daily_forcings_dir/WrfHydroForcing.COMPLETE
 
 %include <tail.h>
+
+%manual
+This script runs the Forcing Engine for the %WRFHYDRO_DOMAIN% WRF-Hydro %WRFHYDRO_CYCLE% cycle.
+Input data is read from
+
+   %FORCING_INPUT_DIR%
+
+using FE configurations in
+
+   %FORCING_CONFIGS_DIR%
+
+and FE parameters in
+
+   %FORCING_PARAMS_DIR%
+
+for the %WRFHYDRO_DOMAIN% domain. LDASIN files are written to
+
+   %WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-output
+
+for %LENGTH_HRS% hours beginning at %CYCLE_DATE% %CYCLE_TIME% (or ending at this time, if using a negative lookback).
+
+Currently, the FE is being bypassed and a "mock FE" is being run instead, which copies pre-generated LDASIN files
+from a fixed location, until an FE configuration for this domain and model cycle are created.
+%end

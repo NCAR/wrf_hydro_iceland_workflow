@@ -1,12 +1,12 @@
 #5.7.0
 suite wrf_hydro_iceland
-  edit ECF_HOME '/home/gaydos/git/wrf_hydro_iceland_workflow'
-  edit ECF_SCRIPT '/home/gaydos/git/wrf_hydro_iceland_workflow/ecfs'
-  edit ECF_FILES '/home/gaydos/git/wrf_hydro_iceland_workflow/ecfs'
-  edit ECF_INCLUDE '/home/gaydos/git/wrf_hydro_iceland_workflow/include'
+  edit ECF_HOME '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow'
+  edit ECF_SCRIPT '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/ecfs'
+  edit ECF_FILES '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/ecfs'
+  edit ECF_INCLUDE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/include'
   edit PROJ 'NRAL0017'
   edit QUEUE 'regular'
-  edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir'
+  edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir'
   family analysis
     family forcings
       edit WRFHYDRO_CYCLE 'analysis'
@@ -21,14 +21,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '-3'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'analysis'
       edit WRFHYDRO_BASE_CYCLE 'analysis'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE ''
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM ''
@@ -36,7 +36,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '-3'
         task wrfhydro_model
           trigger ../../../analysis/forcings/iceland/wrfhydro_forcings == complete
@@ -47,7 +47,7 @@ suite wrf_hydro_iceland
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'analysis_noda'
       edit WRFHYDRO_BASE_CYCLE 'analysis'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE ''
       edit USE_DA 'false'
       edit WRFHYDRO_ENSEMBLE_MEM ''
@@ -55,7 +55,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '-3'
         task wrfhydro_model
           trigger ../../../analysis/forcings/iceland/wrfhydro_forcings == complete
@@ -76,14 +76,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '-28'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'analysis_extended'
       edit WRFHYDRO_BASE_CYCLE 'analysis_extended'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE ''
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM ''
@@ -91,7 +91,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '-28'
         task wrfhydro_model
           trigger ../../../analysis_extended/forcings/iceland/wrfhydro_forcings == complete
@@ -102,7 +102,7 @@ suite wrf_hydro_iceland
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'analysis_extended_noda'
       edit WRFHYDRO_BASE_CYCLE 'analysis_extended'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE ''
       edit USE_DA 'false'
       edit WRFHYDRO_ENSEMBLE_MEM ''
@@ -110,7 +110,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '-28'
         task wrfhydro_model
           trigger ../../../analysis_extended/forcings/iceland/wrfhydro_forcings == complete
@@ -131,14 +131,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '-16'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'analysis_lr'
       edit WRFHYDRO_BASE_CYCLE 'analysis_lr'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE ''
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM ''
@@ -146,7 +146,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '-16'
         task wrfhydro_model
           trigger ../../../analysis_lr/forcings/iceland/wrfhydro_forcings == complete
@@ -157,7 +157,7 @@ suite wrf_hydro_iceland
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'analysis_lr_noda'
       edit WRFHYDRO_BASE_CYCLE 'analysis_lr'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE ''
       edit USE_DA 'false'
       edit WRFHYDRO_ENSEMBLE_MEM ''
@@ -165,7 +165,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '-16'
         task wrfhydro_model
           trigger ../../../analysis_lr/forcings/iceland/wrfhydro_forcings == complete
@@ -186,14 +186,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '18'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'shortrange'
       edit WRFHYDRO_BASE_CYCLE 'shortrange'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis'
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM ''
@@ -202,7 +202,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '18'
         task wrfhydro_model
           trigger ../../../shortrange/forcings/iceland/wrfhydro_forcings == complete
@@ -213,7 +213,7 @@ suite wrf_hydro_iceland
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'shortrange_noda'
       edit WRFHYDRO_BASE_CYCLE 'shortrange'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis_noda'
       edit USE_DA 'false'
       edit WRFHYDRO_ENSEMBLE_MEM ''
@@ -222,7 +222,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '18'
         task wrfhydro_model
           trigger ../../../shortrange/forcings/iceland/wrfhydro_forcings == complete
@@ -243,14 +243,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '240'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'mediumrange'
       edit WRFHYDRO_BASE_CYCLE 'mediumrange_mem1'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis'
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM '1'
@@ -259,7 +259,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '240'
         task wrfhydro_model
           trigger ../../../mediumrange_mem1/forcings/iceland/wrfhydro_forcings == complete
@@ -280,14 +280,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '208'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'mediumrange'
       edit WRFHYDRO_BASE_CYCLE 'mediumrange_mem2'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis'
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM '2'
@@ -296,7 +296,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '208'
         task wrfhydro_model
           trigger ../../../mediumrange_mem2/forcings/iceland/wrfhydro_forcings == complete
@@ -317,14 +317,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '208'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'mediumrange'
       edit WRFHYDRO_BASE_CYCLE 'mediumrange_mem3'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis'
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM '3'
@@ -333,7 +333,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '208'
         task wrfhydro_model
           trigger ../../../mediumrange_mem3/forcings/iceland/wrfhydro_forcings == complete
@@ -354,14 +354,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '208'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'mediumrange'
       edit WRFHYDRO_BASE_CYCLE 'mediumrange_mem4'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis'
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM '4'
@@ -370,7 +370,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '208'
         task wrfhydro_model
           trigger ../../../mediumrange_mem4/forcings/iceland/wrfhydro_forcings == complete
@@ -391,14 +391,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '208'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'mediumrange'
       edit WRFHYDRO_BASE_CYCLE 'mediumrange_mem5'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis'
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM '5'
@@ -407,7 +407,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '208'
         task wrfhydro_model
           trigger ../../../mediumrange_mem5/forcings/iceland/wrfhydro_forcings == complete
@@ -428,14 +428,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '208'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'mediumrange'
       edit WRFHYDRO_BASE_CYCLE 'mediumrange_mem6'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis'
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM '6'
@@ -444,7 +444,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '208'
         task wrfhydro_model
           trigger ../../../mediumrange_mem6/forcings/iceland/wrfhydro_forcings == complete
@@ -465,14 +465,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '208'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'mediumrange'
       edit WRFHYDRO_BASE_CYCLE 'mediumrange_mem7'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis'
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM '7'
@@ -481,7 +481,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '208'
         task wrfhydro_model
           trigger ../../../mediumrange_mem7/forcings/iceland/wrfhydro_forcings == complete
@@ -492,7 +492,7 @@ suite wrf_hydro_iceland
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'mediumrange_noda'
       edit WRFHYDRO_BASE_CYCLE 'mediumrange_mem1'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis_noda'
       edit USE_DA 'false'
       edit WRFHYDRO_ENSEMBLE_MEM ''
@@ -501,7 +501,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '240'
         task wrfhydro_model
           trigger ../../../mediumrange_mem1/forcings/iceland/wrfhydro_forcings == complete
@@ -522,14 +522,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '720'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'longrange'
       edit WRFHYDRO_BASE_CYCLE 'longrange_mem1'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis_lr'
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM '1'
@@ -538,7 +538,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '720'
         task wrfhydro_model
           trigger ../../../longrange_mem1/forcings/iceland/wrfhydro_forcings == complete
@@ -559,14 +559,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '720'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'longrange'
       edit WRFHYDRO_BASE_CYCLE 'longrange_mem2'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis_lr'
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM '2'
@@ -575,7 +575,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '720'
         task wrfhydro_model
           trigger ../../../longrange_mem2/forcings/iceland/wrfhydro_forcings == complete
@@ -596,14 +596,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '720'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'longrange'
       edit WRFHYDRO_BASE_CYCLE 'longrange_mem3'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis_lr'
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM '3'
@@ -612,7 +612,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '720'
         task wrfhydro_model
           trigger ../../../longrange_mem3/forcings/iceland/wrfhydro_forcings == complete
@@ -633,14 +633,14 @@ suite wrf_hydro_iceland
         edit GEOGRID_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc'
         edit SPATIAL_METADATA_FILE '/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc'
         edit LENGTH_HRS '720'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
       endfamily
     endfamily
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'longrange'
       edit WRFHYDRO_BASE_CYCLE 'longrange_mem4'
-      edit MODEL_EXECUTABLE '/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
+      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis_lr'
       edit USE_DA 'true'
       edit WRFHYDRO_ENSEMBLE_MEM '4'
@@ -649,7 +649,7 @@ suite wrf_hydro_iceland
         edit CYCLE_DATE '20210901'
         edit CYCLE_TIME '0600'
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '720'
         task wrfhydro_model
           trigger ../../../longrange_mem4/forcings/iceland/wrfhydro_forcings == complete
