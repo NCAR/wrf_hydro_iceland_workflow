@@ -5,13 +5,18 @@ export FORCING_CONFIG=%WRFHYDRO_DOMAIN%-%WRFHYDRO_CYCLE%
 export FORCING_CONFIGS_DIR=%FORCING_CONFIGS_DIR%
 export FORCING_PARAMS_DIR="%FORCING_PARAMS_DIR%"
 export FORCING_INPUT_DIR="%FORCING_INPUT_DIR%"
-export FORCING_SCRATCH_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-scratch
-export FORCING_OUTPUT_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-output
 export GEOGRID_FILE=%GEOGRID_FILE%
 export SPATIAL_METADATA_FILE=%SPATIAL_METADATA_FILE%
 
-export FORCING_SCRATCH_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-scratch
-export FORCING_OUTPUT_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-output
+if [[ "%WRFHYDRO_ENSEMBLE_MEM%" == "" ]]; then
+    cycle=%WRFHYDRO_CYCLE%
+else
+    cycle=%WRFHYDRO_CYCLE%_mem%WRFHYDRO_ENSEMBLE_MEM%
+fi
+
+export FORCING_SCRATCH_DIR=%WRFHYDRO_JOBDIR%/$cycle/forcings-scratch
+export FORCING_OUTPUT_DIR=%WRFHYDRO_JOBDIR%/$cycle/forcings-output
+
 
 if [[ %LENGTH_HRS% < 0 ]]; then
     export FORCING_BEGIN_DATE=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% %LENGTH_HRS% hours" +%%Y%%m%%d%%H%%M)
@@ -46,7 +51,6 @@ done
 touch $daily_forcings_dir/WrfHydroForcing.COMPLETE
 
 %include <tail.h>
-
 %manual
 This script runs the Forcing Engine for the %WRFHYDRO_DOMAIN% WRF-Hydro %WRFHYDRO_CYCLE% cycle.
 Input data is read from

@@ -18,8 +18,6 @@ DOMAINS = {
         'forcing_configs_dir': FORCING_CONFIGS_DIR,
         'forcing_params_dir': {
             'analysis': "/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/AnA",
-            'analysis_extended': "/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/AnA",
-            'analysis_lr': "/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/AnA",
             'shortrange': "/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/Short_Range",
             'mediumrange': "/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/Medium_Range",
             'longrange': "/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/Long_Range"
@@ -29,25 +27,9 @@ DOMAINS = {
         'spatial_metadata_file': "/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc",
         'cycle_length': {
             'analysis': -3,
-            'analysis_noda': -3,
-            'analysis_extended': -28,
-            'analysis_extended_noda': -28,
-            'analysis_lr': -16,
-            'analysis_lr_noda': -16,
             'shortrange': 18,
-            'shortrange_noda': 18,
-            'mediumrange_mem1': 240,
-            'mediumrange_mem2': 208,
-            'mediumrange_mem3': 208,
-            'mediumrange_mem4': 208,
-            'mediumrange_mem5': 208,
-            'mediumrange_mem6': 208,
-            'mediumrange_mem7': 208,
-            'mediumrange_noda': 240,
-            'longrange_mem1': 720,
-            'longrange_mem2': 720,
-            'longrange_mem3': 720,
-            'longrange_mem4': 720
+            'mediumrange': 240,
+            'longrange': 720
         }
     }
 }
@@ -62,7 +44,7 @@ MODEL_EXE = ECFLOW_DIR + "/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe"
 
 def create_forcings_family(cycle,member=None):
     """
-    Create a family of forcing tasks, including coastal forcings if desired.
+    Create a family of forcing tasks
     Forcing tasks are created for all domains for the requested cycle
     :param cycle: The model cycle (e.g. analysis, shortrange, etc)
     :param member: Ensemble member. Default is None (no ensemble)
@@ -152,7 +134,7 @@ def create_model_family(cycle,useda=True,requiresCycle=None, restartCycle=None,
     return model_family
 
 
-###################################### Suite definition ###################
+###################### Suite definition ################################
 
 def create_suite():
     """
@@ -160,55 +142,22 @@ def create_suite():
     """
 
     defs = Defs(
-            Suite("wrf_hydro_iceland",
-                  Edit(ECF_HOME=ECFLOW_DIR,
-                       ECF_SCRIPT=ECFLOW_DIR + '/ecfs',
-                       ECF_FILES=ECFLOW_DIR + '/ecfs',
-                       ECF_INCLUDE=ECFLOW_DIR + '/include',
-                       PROJ='NRAL0017',
-                       QUEUE='regular',
-                       WRFHYDRO_JOBDIR=WRFHYDRO_JOBDIR),
-                  Family("analysis", create_forcings_family("analysis"), create_model_family("analysis")),
-                  Family("analysis_noda", create_model_family("analysis_noda",useda=False,forcingsCycle="analysis")),
-                  Family("analysis_extended", create_forcings_family("analysis_extended"),
-                         create_model_family("analysis_extended")),
-                  Family("analysis_extended_noda",
-                         create_model_family("analysis_extended_noda", useda=False, forcingsCycle="analysis_extended")),
-                  Family("analysis_lr", create_forcings_family("analysis_lr"),
-                         create_model_family("analysis_lr")),
-                  Family("analysis_lr_noda",
-                         create_model_family("analysis_lr_noda", useda=False, forcingsCycle="analysis_lr")),
-                  Family("shortrange", create_forcings_family("shortrange"),
-                         create_model_family("shortrange",requiresCycle="analysis", restartCycle="analysis")),
-                  Family("shortrange_noda",
-                         create_model_family("shortrange_noda",useda=False,requiresCycle="analysis_noda",
-                                             restartCycle="analysis_noda", forcingsCycle="shortrange")),
-                  Family("mediumrange_mem1", create_forcings_family("mediumrange",member=1),
-                         create_model_family("mediumrange",requiresCycle="analysis", restartCycle="analysis", member=1)),
-                  Family("mediumrange_mem2", create_forcings_family("mediumrange",member=2),
-                         create_model_family("mediumrange", requiresCycle="analysis", restartCycle="analysis", member=2)),
-                  Family("mediumrange_mem3", create_forcings_family("mediumrange",member=3),
-                         create_model_family("mediumrange", requiresCycle="analysis", restartCycle="analysis", member=3)),
-                  Family("mediumrange_mem4", create_forcings_family("mediumrange",member=4),
-                         create_model_family("mediumrange", requiresCycle="analysis", restartCycle="analysis", member=4)),
-                  Family("mediumrange_mem5", create_forcings_family("mediumrange",member=5),
-                         create_model_family("mediumrange", requiresCycle="analysis", restartCycle="analysis", member=5)),
-                  Family("mediumrange_mem6", create_forcings_family("mediumrange",member=6),
-                         create_model_family("mediumrange", requiresCycle="analysis", restartCycle="analysis", member=6)),
-                  Family("mediumrange_mem7", create_forcings_family("mediumrange",member=7),
-                         create_model_family("mediumrange", requiresCycle="analysis", restartCycle="analysis", member=7)),
-                  Family("mediumrange_noda",
-                         create_model_family("mediumrange_noda",useda=False,requiresCycle="analysis_noda",
-                                             restartCycle="analysis_noda", forcingsCycle="mediumrange_mem1")),
-                  Family("longrange_mem1", create_forcings_family("longrange", member=1),
-                         create_model_family("longrange",requiresCycle="analysis_lr", restartCycle="analysis_lr", member=1)),
-                  Family("longrange_mem2", create_forcings_family("longrange", member=2),
-                         create_model_family("longrange", requiresCycle="analysis_lr", restartCycle="analysis_lr", member=2)),
-                  Family("longrange_mem3", create_forcings_family("longrange", member=3),
-                         create_model_family("longrange", requiresCycle="analysis_lr", restartCycle="analysis_lr", member=3)),
-                  Family("longrange_mem4", create_forcings_family("longrange", member=4),
-                         create_model_family("longrange", requiresCycle="analysis_lr", restartCycle="analysis_lr", member=4))
-            ))
+        Suite("wrf_hydro_iceland",
+          Edit(ECF_HOME=ECFLOW_DIR,
+               ECF_SCRIPT=ECFLOW_DIR + '/ecfs',
+               ECF_FILES=ECFLOW_DIR + '/ecfs',
+               ECF_INCLUDE=ECFLOW_DIR + '/include',
+               PROJ='NRAL0017',
+               QUEUE='regular',
+               WRFHYDRO_JOBDIR=WRFHYDRO_JOBDIR),
+          Family("analysis", create_forcings_family("analysis"), create_model_family("analysis", useda=False)),
+          Family("shortrange", create_forcings_family("shortrange"),
+                 create_model_family("shortrange", requiresCycle="analysis", restartCycle="analysis", useda=False)),
+          Family("mediumrange", create_forcings_family("mediumrange"),
+                 create_model_family("mediumrange", requiresCycle="analysis", restartCycle="analysis", useda=False)),
+          Family("longrange", create_forcings_family("longrange"),
+                 create_model_family("longrange", requiresCycle="analysis", restartCycle="analysis", useda=False))
+        ))
     print(defs)
 
     print("Checking trigger expression")
