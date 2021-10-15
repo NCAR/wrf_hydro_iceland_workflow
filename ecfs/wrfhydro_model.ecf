@@ -16,7 +16,7 @@ fi
 cp %ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/params/* $WRF_HYDRO_ROOT
 cp %ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/namelists/%WRFHYDRO_CYCLE%/* $WRF_HYDRO_ROOT
 ln -sf %ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/DOMAIN $WRF_HYDRO_ROOT
-ln -sfn ../../%WRFHYDRO_BASE_CYCLE%/forcings-output/$cycle_date$(echo $cycle_time | cut -c 1-2) $WRF_HYDRO_ROOT/forcing
+ln -sfn ../../%WRFHYDRO_BASE_CYCLE%/forcings-output/$cycle_date$(echo $cycle_time | cut -c 1-2) $WRF_HYDRO_ROOT/FORCING
 ln -sf %MODEL_EXECUTABLE% $WRF_HYDRO_ROOT/wrf_hydro.exe
 
 if [[ "%USE_DA%" == "true" ]]; then
@@ -48,8 +48,8 @@ sed -i "s|^START_DAY .*|START_DAY = ${start_day}|;" ${hrldas_namelist}
 sed -i "s|^START_HOUR .*|START_HOUR = ${start_hour}|;" ${hrldas_namelist}
 sed -i "s|^START_MIN .*|START_MIN = ${start_minute}|;" ${hrldas_namelist}
 
-hrldas_restart=RESTART.${start_year}${start_month}${start_day}${start_hour}_DOMAIN1
-hydro_restart=HYDRO_RST.${start_year}-${start_month}-${start_day}_${start_hour}\:00_DOMAIN1
+hrldas_restart=RESTART.${start_year}${start_month}${start_day}${start_hour}_DOMAIN4
+hydro_restart=HYDRO_RST.${start_year}-${start_month}-${start_day}_${start_hour}\:00_DOMAIN4
 
 if [[ "%WRFHYDRO_RESTART_CYCLE%" != "" ]]; then
     cp %ECF_HOME%/jobdir/%WRFHYDRO_DOMAIN%/%WRFHYDRO_RESTART_CYCLE%/wrfhydro/$hrldas_restart $WRF_HYDRO_ROOT
@@ -70,7 +70,6 @@ sed -i "s|^io_config_outputs = .*|io_config_outputs = 6|;" ${hydro_namelist}
 
 cd $WRF_HYDRO_ROOT
 qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l walltime=03:00:00 %ECF_HOME%/wrfhydro/run_wrf_hydro.sh
-
 
 %include <tail.h>
 

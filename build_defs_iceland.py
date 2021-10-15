@@ -7,9 +7,15 @@ from ecflow import Defs, Suite, Family, Task, Edit, Trigger
 from os.path import join
 import os
 
-ICELAND_PARAMS = {'CYCLE_DATE': '20210901', 'CYCLE_TIME': '0600'}
+ICELAND_PARAMS = {'CYCLE_DATE': '20211009', 'CYCLE_TIME': '0000'}
 
-FORCING_CONFIGS_DIR = "/glade/work/rcabell/ecflow/hydro-workflow/forcings/src/Config/WCOSS/v2.1"
+
+TOP_DIR = os.environ['HOME'] + '/git/wrf_hydro_iceland_workflow'
+ECFLOW_DIR = TOP_DIR
+
+WRFHYDRO_JOBDIR = ECFLOW_DIR + '/jobdir'
+MODEL_EXE = ECFLOW_DIR + "/wrfhydro/wrf_hydro_NoahMP.exe"
+FORCING_CONFIGS_DIR = ECFLOW_DIR + "/forcings/config"
 
 DOMAINS = {
     'iceland': {
@@ -23,8 +29,8 @@ DOMAINS = {
             'longrange': "/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/Long_Range"
         },
         'forcing_input_dir': "/glade/p/ral/allral/zhangyx/RAP_Conus, /glade/p/ral/allral/zhangyx/HRRR_Conus/",
-        'geogrid_file': "/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/geo_em.d01.conus_1km_NWMv2.0.nc",
-        'spatial_metadata_file': "/glade/p/cisl/nwc/nwmv20_finals/CONUS/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata_1km_NWMv2.0.nc",
+        'geogrid_file': ECFLOW_DIR + "/wrfhydro/iceland/DOMAIN/geo_em.d04.nc",
+        'spatial_metadata_file': ECFLOW_DIR + "wrfhydro/iceland/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata.nc",
         'cycle_length': {
             'analysis': -3,
             'shortrange': 18,
@@ -34,11 +40,6 @@ DOMAINS = {
     }
 }
 
-TOP_DIR = os.environ['HOME'] + '/git/wrf_hydro_iceland_workflow'
-ECFLOW_DIR = TOP_DIR
-
-WRFHYDRO_JOBDIR = ECFLOW_DIR + '/jobdir'
-MODEL_EXE = ECFLOW_DIR + "/wrfhydro/src/trunk/NDHMS/Run/wrf_hydro.exe"
 
 ############### Forcing families ##############################
 
@@ -147,7 +148,7 @@ def create_suite():
                ECF_SCRIPT=ECFLOW_DIR + '/ecfs',
                ECF_FILES=ECFLOW_DIR + '/ecfs',
                ECF_INCLUDE=ECFLOW_DIR + '/include',
-               PROJ='NRAL0017',
+               PROJ='p48500028',
                QUEUE='regular',
                WRFHYDRO_JOBDIR=WRFHYDRO_JOBDIR),
           Family("analysis", create_forcings_family("analysis"), create_model_family("analysis", useda=False)),

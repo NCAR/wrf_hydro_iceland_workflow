@@ -37,7 +37,9 @@ if [[ %LENGTH_HRS% < 0 ]]; then
   let cycle_length=$cycle_length*-1
 fi
 
-archive_dir=/glade/p/cisl/nwc/gaydos/nwm/3.0/data/forcings/%WRFHYDRO_DOMAIN%/%WRFHYDRO_CYCLE%
+cycle_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d%%H)
+
+archive_dir=/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/data/forcings/%WRFHYDRO_DOMAIN%/%WRFHYDRO_CYCLE%/${cycle_date:0:8}/${cycle_date:8:2}
 daily_forcings_dir=$FORCING_OUTPUT_DIR/${FORCING_BEGIN_DATE:0:10}
 daily_start_date=$FORCING_BEGIN_DATE
 
@@ -46,7 +48,10 @@ mkdir -p $daily_forcings_dir
 for i in $(seq 1 $cycle_length)
 do
     d=$(date -ud "${daily_start_date:0:8} ${daily_start_date:8} +$i hours" +%%Y%%m%%d%%H%%M)
-    ln -sf $archive_dir/$d.LDASIN_DOMAIN1 $daily_forcings_dir/$d.LDASIN_DOMAIN1
+    if [[ -e $archive_dir/$d.LDASIN_DOMAIN1 ]]; then
+        ln -sf $archive_dir/$d.LDASIN_DOMAIN1 $daily_forcings_dir/$d.LDASIN_DOMAIN4
+    fi
+
 done
 touch $daily_forcings_dir/WrfHydroForcing.COMPLETE
 
