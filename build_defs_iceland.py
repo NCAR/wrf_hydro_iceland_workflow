@@ -20,7 +20,6 @@ FORCING_CONFIGS_DIR = ECFLOW_DIR + "/forcings/config"
 DOMAINS = {
     'iceland': {
         'name': "ICELAND",
-        'params': ICELAND_PARAMS,
         'forcing_configs_dir': FORCING_CONFIGS_DIR,
         'forcing_params_dir': {
             'analysis': "/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/AnA",
@@ -40,6 +39,9 @@ DOMAINS = {
     }
 }
 
+HYDROINSPECTOR_HOST = "hydro-c1-content.rap.ucar.edu"
+HYDROINSPECTOR_DIR = "/d5/hydroinspector_data/tmp/iceland"
+
 
 ############### Forcing families ##############################
 
@@ -57,7 +59,6 @@ def create_forcings_family(cycle,member=None):
         if wrfhydro_cycle not in DOMAINS[domain]['cycle_length']:
             continue
 
-        params = DOMAINS[domain]['params']
         cycle_length = DOMAINS[domain]['cycle_length'][wrfhydro_cycle]
         configs_dir = DOMAINS[domain]['forcing_configs_dir']
         params_dir = DOMAINS[domain]['forcing_params_dir'][cycle]
@@ -67,7 +68,6 @@ def create_forcings_family(cycle,member=None):
 
         wrfhydro_family = Family(domain,
             Edit(WRFHYDRO_DOMAIN=domain),
-            Edit(**params),
             Edit(
                 FORCING_CONFIGS_DIR=configs_dir,
                 FORCING_PARAMS_DIR=params_dir,
@@ -76,6 +76,9 @@ def create_forcings_family(cycle,member=None):
                 SPATIAL_METADATA_FILE=spatial_metadata_file,
                 LENGTH_HRS=cycle_length,
                 WRFHYDRO_JOBDIR=join(WRFHYDRO_JOBDIR, domain)))
+
+        if 'params' in DOMAINS[domain]:
+            wrfhydro_family += Edit(**DOMAINS[domain]['params'])
 
         wrfhydro_family += Task("wrfhydro_forcings")
         forcings_family += wrfhydro_family
@@ -119,11 +122,12 @@ def create_model_family(cycle,useda=True,requiresCycle=None, restartCycle=None,
 
         cycle_length = DOMAINS[domain]['cycle_length'][wrfhydro_cycle]
         wrfhydro_dir = join(WRFHYDRO_JOBDIR, domain)
-        params = DOMAINS[domain]['params']
 
         wrfhydro_family = Family(domain,
-            Edit(**params),
             Edit(WRFHYDRO_DOMAIN=domain,WRFHYDRO_JOBDIR=wrfhydro_dir,LENGTH_HRS=cycle_length))
+
+        if 'params' in DOMAINS[domain]:
+            wrfhydro_family += Edit(**DOMAINS[domain]['params'])
 
         if requiresCycle:
             wrfhydro_family += Trigger(f"../../{requiresCycle}/wrfhydro_model/{domain}/wrfhydro_model == complete")
@@ -135,12 +139,68 @@ def create_model_family(cycle,useda=True,requiresCycle=None, restartCycle=None,
     return model_family
 
 
+###################### Data families ##################################
+
+def create_data_pull_family(cycle):
+    """
+    """
+    data_pull_family = Family("data_pull")
+    data_pull_family += Edit(WRFHYDRO_CYCLE=cycle)
+
+    for domain in DOMAINS:
+        domain_family = Family(domain,
+            Edit(WRFHYDRO_DOMAIN=domain)
+        )
+
+        if 'params' in DOMAINS[domain]:
+            domain_family += Edit(**DOMAINS[domain]['params'])
+
+        domain_family += Task("data_pull")
+
+        data_pull_family += domain_family
+
+    return data_pull_family
+    
+
+
+def create_data_push_family(cycle, member=None):
+    """
+    """
+    wrfhydro_cycle = cycle if member is None else f"{cycle}_mem{member}"
+
+    data_push_family = Family("data_push")
+    data_push_family += Edit(WRFHYDRO_CYCLE=wrfhydro_cycle,HYDROINSPECTOR_HOST=HYDROINSPECTOR_HOST,
+        HYDROINSPECTOR_DIR=HYDROINSPECTOR_DIR)
+
+    for domain in DOMAINS:
+        if wrfhydro_cycle not in DOMAINS[domain]['cycle_length']:
+            continue
+
+        cycle_length = DOMAINS[domain]['cycle_length'][wrfhydro_cycle]
+        jobdir = join(WRFHYDRO_JOBDIR, domain)
+        domain_family = Family(domain,
+            Edit(WRFHYDRO_DOMAIN=domain, WRFHYDRO_JOBDIR=jobdir,LENGTH_HRS=cycle_length),
+            Trigger(f"../wrfhydro_model/{domain}/wrfhydro_model == complete")
+        )
+
+        if 'params' in DOMAINS[domain]:
+            domain_family += Edit(**DOMAINS[domain]['params'])
+
+        domain_family += Task("data_push")
+
+        data_push_family += domain_family
+
+    return data_push_family
+
+
 ###################### Suite definition ################################
 
 def create_suite():
     """
     Create the suite definition for all model cycles
     """
+
+    params = ICELAND_PARAMS
 
     defs = Defs(
         Suite("wrf_hydro_iceland",
@@ -151,13 +211,21 @@ def create_suite():
                PROJ='p48500028',
                QUEUE='regular',
                WRFHYDRO_JOBDIR=WRFHYDRO_JOBDIR),
-          Family("analysis", create_forcings_family("analysis"), create_model_family("analysis", useda=False)),
-          Family("shortrange", create_forcings_family("shortrange"),
-                 create_model_family("shortrange", requiresCycle="analysis", restartCycle="analysis", useda=False)),
-          Family("mediumrange", create_forcings_family("mediumrange"),
-                 create_model_family("mediumrange", requiresCycle="analysis", restartCycle="analysis", useda=False)),
-          Family("longrange", create_forcings_family("longrange"),
-                 create_model_family("longrange", requiresCycle="analysis", restartCycle="analysis", useda=False))
+          Family("analysis", Edit(**params),create_data_pull_family("analysis"), create_forcings_family("analysis"), 
+            create_model_family("analysis", useda=False), create_data_push_family("analysis")
+          ),
+          Family("shortrange", Edit(**params),create_data_pull_family("shortrange"), create_forcings_family("shortrange"),
+                 create_model_family("shortrange", requiresCycle="analysis", restartCycle="analysis", useda=False), 
+                 create_data_push_family("shortrange")
+          ),
+          Family("mediumrange", Edit(**params),create_data_pull_family("mediumrange"), create_forcings_family("mediumrange"),
+                 create_model_family("mediumrange", requiresCycle="analysis", restartCycle="analysis", useda=False), 
+                 create_data_push_family("mediumrange")
+          ),
+          Family("longrange", Edit(**params),create_data_pull_family("longrange"), create_forcings_family("longrange"),
+                 create_model_family("longrange", requiresCycle="analysis", restartCycle="analysis", useda=False), 
+                 create_data_push_family("longrange")
+          )
         ))
     print(defs)
 

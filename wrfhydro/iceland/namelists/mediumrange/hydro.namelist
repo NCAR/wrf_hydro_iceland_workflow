@@ -69,7 +69,7 @@ io_form_outputs = 4
 ! Realtime run configuration option:
 ! 0=all (default), 1=analysis, 2=short-range, 3=medium-range, 4=long-range, 5=retrospective,
 ! 6=diagnostic (includes all of 1-4 outputs combined)
-io_config_outputs = 3
+io_config_outputs = 0
 
 ! Option to write output files at time 0 (restart cold start time): 0=no, 1=yes (default)
 t0OutputFlag = 0
@@ -86,13 +86,13 @@ CHRTOUT_DOMAIN = 0           ! Netcdf point timeseries output at all channel poi
                              !      0 = no output, 1 = output
 CHANOBS_DOMAIN = 1           ! Netcdf point timeseries at forecast points or gage points (defined in Routelink)
                              !      0 = no output, 1 = output at forecast points or gage points.
-CHRTOUT_GRID = 0             ! Netcdf grid of channel streamflow values (2d)
+CHRTOUT_GRID = 1             ! Netcdf grid of channel streamflow values (2d)
                              !      0 = no output, 1 = output
                              !      NOTE: Not available with reach-based routing
 LSMOUT_DOMAIN = 0            ! Netcdf grid of variables passed between LSM and routing components (2d)
                              !      0 = no output, 1 = output
                              !      NOTE: No scale_factor/add_offset available
-RTOUT_DOMAIN = 0             ! Netcdf grid of terrain routing variables on routing grid (2d)
+RTOUT_DOMAIN = 1             ! Netcdf grid of terrain routing variables on routing grid (2d)
                              !      0 = no output, 1 = output
 output_gw = 1                ! Netcdf GW output
                              !      0 = no output, 1 = output

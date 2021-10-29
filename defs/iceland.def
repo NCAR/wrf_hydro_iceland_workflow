@@ -8,13 +8,20 @@ suite wrf_hydro_iceland
   edit QUEUE 'regular'
   edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir'
   family analysis
+    edit CYCLE_DATE '20211009'
+    edit CYCLE_TIME '0000'
+    family data_pull
+      edit WRFHYDRO_CYCLE 'analysis'
+      family iceland
+        edit WRFHYDRO_DOMAIN 'iceland'
+        task data_pull
+      endfamily
+    endfamily
     family forcings
       edit WRFHYDRO_CYCLE 'analysis'
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit CYCLE_DATE '20211009'
-        edit CYCLE_TIME '0000'
         edit FORCING_CONFIGS_DIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/forcings/config'
         edit FORCING_PARAMS_DIR '/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/AnA'
         edit FORCING_INPUT_DIR '/glade/p/ral/allral/zhangyx/RAP_Conus, /glade/p/ral/allral/zhangyx/HRRR_Conus/'
@@ -33,8 +40,6 @@ suite wrf_hydro_iceland
       edit USE_DA 'false'
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
-        edit CYCLE_DATE '20211009'
-        edit CYCLE_TIME '0000'
         edit WRFHYDRO_DOMAIN 'iceland'
         edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '-3'
@@ -42,15 +47,34 @@ suite wrf_hydro_iceland
           trigger ../../../analysis/forcings/iceland/wrfhydro_forcings == complete
       endfamily
     endfamily
+    family data_push
+      edit WRFHYDRO_CYCLE 'analysis'
+      edit HYDROINSPECTOR_HOST 'hydro-c1-content.rap.ucar.edu'
+      edit HYDROINSPECTOR_DIR '/d5/hydroinspector_data/tmp/iceland'
+      family iceland
+        trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
+        edit WRFHYDRO_DOMAIN 'iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit LENGTH_HRS '-3'
+        task data_push
+      endfamily
+    endfamily
   endfamily
   family shortrange
+    edit CYCLE_DATE '20211009'
+    edit CYCLE_TIME '0000'
+    family data_pull
+      edit WRFHYDRO_CYCLE 'shortrange'
+      family iceland
+        edit WRFHYDRO_DOMAIN 'iceland'
+        task data_pull
+      endfamily
+    endfamily
     family forcings
       edit WRFHYDRO_CYCLE 'shortrange'
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit CYCLE_DATE '20211009'
-        edit CYCLE_TIME '0000'
         edit FORCING_CONFIGS_DIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/forcings/config'
         edit FORCING_PARAMS_DIR '/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/Short_Range'
         edit FORCING_INPUT_DIR '/glade/p/ral/allral/zhangyx/RAP_Conus, /glade/p/ral/allral/zhangyx/HRRR_Conus/'
@@ -70,8 +94,6 @@ suite wrf_hydro_iceland
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         trigger ../../analysis/wrfhydro_model/iceland/wrfhydro_model == complete
-        edit CYCLE_DATE '20211009'
-        edit CYCLE_TIME '0000'
         edit WRFHYDRO_DOMAIN 'iceland'
         edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '18'
@@ -79,15 +101,34 @@ suite wrf_hydro_iceland
           trigger ../../../shortrange/forcings/iceland/wrfhydro_forcings == complete
       endfamily
     endfamily
+    family data_push
+      edit WRFHYDRO_CYCLE 'shortrange'
+      edit HYDROINSPECTOR_HOST 'hydro-c1-content.rap.ucar.edu'
+      edit HYDROINSPECTOR_DIR '/d5/hydroinspector_data/tmp/iceland'
+      family iceland
+        trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
+        edit WRFHYDRO_DOMAIN 'iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit LENGTH_HRS '18'
+        task data_push
+      endfamily
+    endfamily
   endfamily
   family mediumrange
+    edit CYCLE_DATE '20211009'
+    edit CYCLE_TIME '0000'
+    family data_pull
+      edit WRFHYDRO_CYCLE 'mediumrange'
+      family iceland
+        edit WRFHYDRO_DOMAIN 'iceland'
+        task data_pull
+      endfamily
+    endfamily
     family forcings
       edit WRFHYDRO_CYCLE 'mediumrange'
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit CYCLE_DATE '20211009'
-        edit CYCLE_TIME '0000'
         edit FORCING_CONFIGS_DIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/forcings/config'
         edit FORCING_PARAMS_DIR '/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/Medium_Range'
         edit FORCING_INPUT_DIR '/glade/p/ral/allral/zhangyx/RAP_Conus, /glade/p/ral/allral/zhangyx/HRRR_Conus/'
@@ -107,8 +148,6 @@ suite wrf_hydro_iceland
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         trigger ../../analysis/wrfhydro_model/iceland/wrfhydro_model == complete
-        edit CYCLE_DATE '20211009'
-        edit CYCLE_TIME '0000'
         edit WRFHYDRO_DOMAIN 'iceland'
         edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '240'
@@ -116,15 +155,34 @@ suite wrf_hydro_iceland
           trigger ../../../mediumrange/forcings/iceland/wrfhydro_forcings == complete
       endfamily
     endfamily
+    family data_push
+      edit WRFHYDRO_CYCLE 'mediumrange'
+      edit HYDROINSPECTOR_HOST 'hydro-c1-content.rap.ucar.edu'
+      edit HYDROINSPECTOR_DIR '/d5/hydroinspector_data/tmp/iceland'
+      family iceland
+        trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
+        edit WRFHYDRO_DOMAIN 'iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit LENGTH_HRS '240'
+        task data_push
+      endfamily
+    endfamily
   endfamily
   family longrange
+    edit CYCLE_DATE '20211009'
+    edit CYCLE_TIME '0000'
+    family data_pull
+      edit WRFHYDRO_CYCLE 'longrange'
+      family iceland
+        edit WRFHYDRO_DOMAIN 'iceland'
+        task data_pull
+      endfamily
+    endfamily
     family forcings
       edit WRFHYDRO_CYCLE 'longrange'
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit CYCLE_DATE '20211009'
-        edit CYCLE_TIME '0000'
         edit FORCING_CONFIGS_DIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/forcings/config'
         edit FORCING_PARAMS_DIR '/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/Long_Range'
         edit FORCING_INPUT_DIR '/glade/p/ral/allral/zhangyx/RAP_Conus, /glade/p/ral/allral/zhangyx/HRRR_Conus/'
@@ -144,13 +202,23 @@ suite wrf_hydro_iceland
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         trigger ../../analysis/wrfhydro_model/iceland/wrfhydro_model == complete
-        edit CYCLE_DATE '20211009'
-        edit CYCLE_TIME '0000'
         edit WRFHYDRO_DOMAIN 'iceland'
         edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         edit LENGTH_HRS '720'
         task wrfhydro_model
           trigger ../../../longrange/forcings/iceland/wrfhydro_forcings == complete
+      endfamily
+    endfamily
+    family data_push
+      edit WRFHYDRO_CYCLE 'longrange'
+      edit HYDROINSPECTOR_HOST 'hydro-c1-content.rap.ucar.edu'
+      edit HYDROINSPECTOR_DIR '/d5/hydroinspector_data/tmp/iceland'
+      family iceland
+        trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
+        edit WRFHYDRO_DOMAIN 'iceland'
+        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit LENGTH_HRS '720'
+        task data_push
       endfamily
     endfamily
   endfamily

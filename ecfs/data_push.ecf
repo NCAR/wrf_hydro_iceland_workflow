@@ -1,0 +1,61 @@
+%include <head.h>
+
+echo "=== STARTING PUSH DATA FOR %WRFHYDRO_CYCLE% ==="
+
+export WRF_HYDRO_ROOT=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/model-output
+export cycle_date=%CYCLE_DATE%
+export cycle_time=%CYCLE_TIME%
+export cycle_hour=${cycle_time:0:2}
+
+# copy selected model output files
+cd $WRF_HYDRO_ROOT/$cycle_date$cycle_hour
+for i in LDASOUT RTOUT LAKEOUT
+do
+    for file in `ls -1 *.$i*`
+    do
+        out=%HYDROINSPECTOR_DIR%/%WRFHYDRO_CYCLE%/$cycle_date$cycle_hour
+
+        cmd="ssh %HYDROINSPECTOR_HOST% mkdir -p $out"
+        echo $cmd
+        $cmd
+        cmd="scp $file %HYDROINSPECTOR_HOST%:$out/$file"
+        echo $cmd
+        $cmd
+        cmd="ssh %HYDROINSPECTOR_HOST% chmod -R g+w $out"
+        echo $cmd
+        $cmd
+    done
+done
+
+# copy selected forcing output files
+if [[ %LENGTH_HRS% < 0 ]]; then
+    forcings_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +%LENGTH_HRS% hours" +%%Y%%m%%d%%H)
+else
+    forcings_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d%%H)
+fi
+
+export FORCINGS_OUTPUT_ROOT=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-output/$forcings_date
+cd $FORCINGS_OUTPUT_ROOT
+
+for i in LDASIN
+do
+    for file in `ls -1 *.$i*`
+    do
+        out=%HYDROINSPECTOR_DIR%/%WRFHYDRO_CYCLE%/$cycle_date$cycle_hour
+
+        cmd="ssh %HYDROINSPECTOR_HOST% mkdir -p $out"
+        echo $cmd
+        $cmd
+        cmd="scp $file %HYDROINSPECTOR_HOST%:$out/$file"
+        echo $cmd
+        $cmd
+        cmd="ssh %HYDROINSPECTOR_HOST% chmod -R g+w $out"
+        echo $cmd
+        $cmd
+    done
+done
+
+%include <tail.h>
+%manual
+This process pushes select model output and forcing files to HydroInspector for display
+%end

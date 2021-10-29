@@ -66,10 +66,25 @@ sed -i "s|^RESTART_FILENAME_REQUESTED .*|RESTART_FILENAME_REQUESTED = ${hrldas_r
 ## change output type to 6 until short-range is updated to include q_lateral
 sed -i "s|^io_config_outputs = .*|io_config_outputs = 6|;" ${hydro_namelist}
 
-# call the model!
-
 cd $WRF_HYDRO_ROOT
+
+# call the model!
+########################### NOTE this command may need to be modified depending on the #################################
+########################### job submission framework being used                        #################################
+
 qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l walltime=03:00:00 %ECF_HOME%/wrfhydro/run_wrf_hydro.sh
+
+########################################################################################################################
+# copy output to dated directory
+
+output_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d%%H)
+export OUTPUT_ROOT=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/model-output/$output_date
+mkdir -p $OUTPUT_ROOT
+
+for i in CHANOBS CHRTOUT GWOUT LAKEOUT LDASOUT RTOUT 
+do
+    mv $WRF_HYDRO_ROOT/*.$i* $OUTPUT_ROOT/.
+done
 
 %include <tail.h>
 
@@ -97,8 +112,8 @@ using restart files for this cycle (analysis only) or from
 
    %ECF_HOME%/jobdir/%WRFHYDRO_DOMAIN%/%WRFHYDRO_RESTART_CYCLE%/wrfhydro
 
-Output data and restart files are written to
+Output data is written to
 
-   %WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/wrfhydro
+   %WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/model-output
 
 %end

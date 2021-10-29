@@ -29,7 +29,12 @@ fi
 mkdir -p $FORCING_SCRATCH_DIR
 mkdir -p $FORCING_OUTPUT_DIR
 
+########################### NOTE this command may need to be modified depending on the #################################
+########################### job submission framework being used                        #################################
+
 # qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l select=1:ncpus=36:mpiprocs=36 $FORCING_ROOT_DIR/forcings_job.sh
+
+########################################################################################################################
 
 # MOCK FE -- SYMLINK LDASIN FILES FROM ARCHIVE
 cycle_length=%LENGTH_HRS%
