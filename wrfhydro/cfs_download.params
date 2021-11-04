@@ -1,0 +1,62 @@
+#
+# This is the default parameter file for NWMFileDownloader.py
+# All parameters must be defined for the parameter file to be
+# valid.
+#
+# The parameter file follows all python coding syntax rules,
+# (and in fact is executed as python code.)
+#
+##############################################################
+
+import os
+
+# ------------ Data Input ---------------
+# Root URL of the data on the server.
+root_url = "http://nomads.ncep.noaa.gov/pub/data/nccf/com/cfs/prod/cfs"
+
+# URL (relative to root_url) of the dated folder. Use __DATE__ as a placeholder for the date.
+# Wildcards (*) may be used to match other directory levels, but each level of the dated folder's
+# parents (up to root_url) MUST be specified with a '/'
+date_url = "cfs.__DATE__"
+
+# Date format used for the URLs representation of __DATE__. See strftime for available format characters
+url_date_format = "%Y%m%d"
+
+# URL (relative to root_url) of the forecast cycle folder. Use __FORECAST_CYCLE__ as a placeholder for the forecast
+# cycle. Wildcards (*) may be used to match other directory levels, but each level of the forecast cycle folder's
+# parents (up to root_url) MUST be specified with a '/'
+forecast_cycle_url = "*/*/__FORECAST_CYCLE__"
+
+# Forecast cycles to download. Each forecast cycle is a dict containing the name used in the input URL, and
+# a list of file patterns to download for each.
+# To download all forecast cycles use '*' for the name.
+# To download all files for a forecast cycle use ['*'] for the file patterns list
+forecast_cycles = [
+    {'name': '6hrly_grib_01', 'file_patterns': ['flxf*grb2']}
+]
+
+# ------------ Data Output ---------------
+# Local directory structure for writing output files. Use __DATE__ and __FORECAST_CYCLE__ placeholders
+output_dir = os.environ['FORCING_INPUTDIR']
+
+# ------------ Request Settings ----------
+# The maximum number of requests that will be made to the http server
+# per minute. This includes both file requests and directory listings
+max_requests_per_minute = 50
+
+# Timeout for requests and file downloads. This is a timeout for stalled, not slow, connections.
+# Set to None None to use the system's default timeout
+timeout = 20
+
+# Maximum number of timeouts that will be tolerated before application terminates.
+max_timeouts = 2
+
+# Maximum number of other errors that will be tolerated before application terminates.
+max_errors = 2
+
+# List of email addresses to notify in case of too many timeouts or other errors
+emails = ['myself@me.com']
+
+# Limit notification emails to one per this many minutes to avoid getting 'spammed' by recurring errors
+notification_min_minutes = 1440
+
