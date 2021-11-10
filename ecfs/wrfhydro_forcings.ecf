@@ -1,64 +1,56 @@
 %include <head.h>
 
-export FORCING_ROOT_DIR=%ECF_HOME%/forcings
-export FORCING_CONFIG=%WRFHYDRO_DOMAIN%-%WRFHYDRO_CYCLE%
-export FORCING_CONFIGS_DIR=%FORCING_CONFIGS_DIR%
-export FORCING_PARAMS_DIR="%FORCING_PARAMS_DIR%"
-export FORCING_INPUT_DIR="%FORCING_INPUT_DIR%"
-export GEOGRID_FILE=%GEOGRID_FILE%
-export SPATIAL_METADATA_FILE=%SPATIAL_METADATA_FILE%
+dt=`date -u +%%Y%%m%%d%%H%%M%%S`
+echo "$dt: Running the %WRFHYDRO_CYCLE% forcings for time %CYCLE_DATE% %CYCLE_TIME%" >> /glade/u/home/gaydos/iceland.log
 
-if [[ "%WRFHYDRO_ENSEMBLE_MEM%" == "" ]]; then
-    cycle=%WRFHYDRO_CYCLE%
-else
-    cycle=%WRFHYDRO_CYCLE%_mem%WRFHYDRO_ENSEMBLE_MEM%
+export FORCING_ROOT_DIR=%FORCING_DIR%
+export FORCING_CYCLE=%WRFHYDRO_CYCLE%
+export FORCING_SCRATCH_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-scratch
+export FORCING_OUTPUT_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-output
+export FORCING_INPUT_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-input
+
+export DOMAIN=%ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/DOMAIN
+export WEIGHTS=%ECF_HOME%/forcings/ESMFWeightFiles
+
+hrs=%LENGTH_HRS%
+if [ "$hrs" -lt "0" ]; then 
+    let hrs=$hrs*-1
 fi
-
-export FORCING_SCRATCH_DIR=%WRFHYDRO_JOBDIR%/$cycle/forcings-scratch
-export FORCING_OUTPUT_DIR=%WRFHYDRO_JOBDIR%/$cycle/forcings-output
-
-
-if [[ %LENGTH_HRS% < 0 ]]; then
-    export FORCING_BEGIN_DATE=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% %LENGTH_HRS% hours" +%%Y%%m%%d%%H%%M)
-    export FORCING_END_DATE=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d%%H%%M)
-else
-    export FORCING_BEGIN_DATE=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d%%H%%M)
-    export FORCING_END_DATE=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +%LENGTH_HRS% hours" +%%Y%%m%%d%%H%%M)
-fi
+let FORCING_LENGTH_MINS=$hrs*60
+export FORCING_BEGIN_DATE=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d%%H%%M)
+export FORCING_END_DATE=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +$hrs hours" +%%Y%%m%%d%%H%%M)
 
 mkdir -p $FORCING_SCRATCH_DIR
 mkdir -p $FORCING_OUTPUT_DIR
 
+# copy the template file
+export FORCING_CONFIG=$FORCING_SCRATCH_DIR/iceland_forcing_engine.config
+cp %ECF_HOME%/forcings/configs/iceland_forcing_engine-%WRFHYDRO_CYCLE%.config $FORCING_CONFIG
+
+sed -i "s|__START__|${FORCING_BEGIN_DATE}|;" ${FORCING_CONFIG}
+sed -i "s|__END__|${FORCING_END_DATE}|;" ${FORCING_CONFIG}
+sed -i "s|__DOMAIN__|${DOMAIN}|;" ${FORCING_CONFIG}
+sed -i "s|__INDIR__|${FORCING_INPUT_DIR}|;" ${FORCING_CONFIG}
+sed -i "s|__OUTDIR__|${FORCING_OUTPUT_DIR}|;" ${FORCING_CONFIG}
+sed -i "s|__SCRATCHDIR__|${FORCING_SCRATCH_DIR}|;" ${FORCING_CONFIG}
+sed -i "s|__WEIGHTSDIR__|${WEIGHTS}|;" ${FORCING_CONFIG}
+sed -i "s|__LENGTH__|${FORCING_LENGTH_MINS}|;" ${FORCING_CONFIG}
+
+
 ########################### NOTE this command may need to be modified depending on the #################################
 ########################### job submission framework being used                        #################################
 
-# qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l select=1:ncpus=36:mpiprocs=36 $FORCING_ROOT_DIR/forcings_job.sh
+qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l select=1:ncpus=36:mpiprocs=36 %ECF_HOME%/forcings/forcings_job.sh
 
 ########################################################################################################################
 
-# MOCK FE -- SYMLINK LDASIN FILES FROM ARCHIVE
-cycle_length=%LENGTH_HRS%
-if [[ %LENGTH_HRS% < 0 ]]; then
-  let cycle_length=$cycle_length*-1
-fi
-
-cycle_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d%%H)
-
-archive_dir=/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/data/forcings/%WRFHYDRO_DOMAIN%/%WRFHYDRO_CYCLE%/${cycle_date:0:8}/${cycle_date:8:2}
-daily_forcings_dir=$FORCING_OUTPUT_DIR/${FORCING_BEGIN_DATE:0:10}
-daily_start_date=$FORCING_BEGIN_DATE
-
-mkdir -p $daily_forcings_dir
-
-for i in $(seq 1 $cycle_length)
+# Change DOMAIN1 to DOMAIN4
+cd $FORCING_OUTPUT_DIR/${FORCING_BEGIN_DATE:0:10}
+for f in `ls -1 *DOMAIN1`
 do
-    d=$(date -ud "${daily_start_date:0:8} ${daily_start_date:8} +$i hours" +%%Y%%m%%d%%H%%M)
-    if [[ -e $archive_dir/$d.LDASIN_DOMAIN1 ]]; then
-        ln -sf $archive_dir/$d.LDASIN_DOMAIN1 $daily_forcings_dir/$d.LDASIN_DOMAIN4
-    fi
-
+    nf=`echo $f | sed "s|DOMAIN1|DOMAIN4|;"`
+    mv $f $nf
 done
-touch $daily_forcings_dir/WrfHydroForcing.COMPLETE
 
 %include <tail.h>
 %manual
@@ -80,7 +72,4 @@ for the %WRFHYDRO_DOMAIN% domain. LDASIN files are written to
    %WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-output
 
 for %LENGTH_HRS% hours beginning at %CYCLE_DATE% %CYCLE_TIME% (or ending at this time, if using a negative lookback).
-
-Currently, the FE is being bypassed and a "mock FE" is being run instead, which copies pre-generated LDASIN files
-from a fixed location, until an FE configuration for this domain and model cycle are created.
 %end

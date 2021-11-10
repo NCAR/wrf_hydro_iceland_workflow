@@ -1,0 +1,18 @@
+Installation of WRF-Hydro workflow
+----------------------------------
+
+Requirements:
+    
+    ecflow and ecflow-python
+    wrhydro executable
+    Iceland model domain files
+    
+
+1) set TOP_DIR = root of the wrf_hydro_iceland_workflow repository in 'build_defs_iceland.py'
+2) Create a symlink 'jobdir' in $TOP_DIR to point to a data directory with sufficient space
+   for storing all forcings and output datafiles.
+3) Compile WRF-Hydro and copy the executable to $TOP_DIR/wrfhydro/wrf_hydro_NoahMP.exe
+4) Copy Iceland domain files to $TOP_DIR/wrfhydro/iceland/DOMAIN
+5) Install and run a local ecflow server (see ECFLOW documentation)
+6) build the suite definitions by executing build_defs_iceland.py
+7) upload the definition to the running ecflow server and start it using reload_suite.py

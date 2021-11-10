@@ -3,13 +3,14 @@
 echo "=== STARTING PUSH DATA FOR %WRFHYDRO_CYCLE% ==="
 
 export WRF_HYDRO_ROOT=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/model-output
+
 export cycle_date=%CYCLE_DATE%
 export cycle_time=%CYCLE_TIME%
 export cycle_hour=${cycle_time:0:2}
 
 # copy selected model output files
 cd $WRF_HYDRO_ROOT/$cycle_date$cycle_hour
-for i in LDASOUT RTOUT LAKEOUT
+for i in LDASOUT RTOUT LAKEOUT CHRTOUT_GRID
 do
     for file in `ls -1 *.$i*`
     do
@@ -27,12 +28,7 @@ do
     done
 done
 
-# copy selected forcing output files
-if [[ %LENGTH_HRS% < 0 ]]; then
-    forcings_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +%LENGTH_HRS% hours" +%%Y%%m%%d%%H)
-else
-    forcings_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d%%H)
-fi
+forcings_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d%%H)
 
 export FORCINGS_OUTPUT_ROOT=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-output/$forcings_date
 cd $FORCINGS_OUTPUT_ROOT

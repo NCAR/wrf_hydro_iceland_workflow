@@ -1,5 +1,60 @@
 %include <head.h>
 
+if [ "%RUN_MODE%" == "realtime" ]; then
+    tm=%TIME%
+    cycle_date=`date -u -d "%ECF_DATE% ${tm:0:2}:00:00Z -%LATENCY%hours" +%%Y%%m%%d`
+    cycle_time=`date -u -d "%ECF_DATE% ${tm:0:2}:00:00Z -%LATENCY%hours" +%%H`
+    ecflow_client --alter=change variable CYCLE_DATE "$cycle_date" /%SUITE%/%WRFHYDRO_CYCLE%
+    ecflow_client --alter=change variable CYCLE_TIME "$cycle_time" /%SUITE%/%WRFHYDRO_CYCLE%
+else
+    cycle_date=%CYCLE_DATE%
+    cycle_time=%CYCLE_TIME%
+fi
+
+cd %ECF_HOME%/wrfhydro
+export TOPDIR=%ECF_HOME%
+
+if [ "%WRFHYDRO_CYCLE%" == "analysis" ]; then
+    dt=`date -u -d "$cycle_date ${cycle_time:0:2}:00:00Z -6hours" +%%Y%%m%%d`
+else
+    dt=$cycle_date
+fi
+
+export FORCING_DATE=$cycle_date${cycle_time:0:2}
+export LENGTH_HRS=%LENGTH_HRS%
+
+if [ "%WRFHYDRO_CYCLE%" == "longrange" ]; then
+    export FORCING_INPUTDIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_DOMAIN%/%WRFHYDRO_CYCLE%/forcings-input/cfs.$dt/${cycle_time:0:2}/6hrly_grib_01
+    export FORCING_SCRATCHDIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_DOMAIN%/%WRFHYDRO_CYCLE%/forcings-scratch/$dt
+    mkdir -p $FORCING_INPUTDIR
+    mkdir -p $FORCING_SCRATCHDIR
+    python get_CFS.py
+elif [ "%WRFHYDRO_CYCLE%" == "mediumrange" ]; then
+    export FORCING_INPUTDIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_DOMAIN%/%WRFHYDRO_CYCLE%/forcings-input/gfs.$dt/${cycle_time:0:2}
+    export FORCING_SCRATCHDIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_DOMAIN%/%WRFHYDRO_CYCLE%/forcings-scratch/$dt
+    mkdir -p $FORCING_INPUTDIR
+    mkdir -p $FORCING_SCRATCHDIR
+    python get_GFS.py 
+elif [ "%WRFHYDRO_CYCLE%" == "shortrange" ]; then
+    export FORCING_INPUTDIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_DOMAIN%/%WRFHYDRO_CYCLE%/forcings-input/WRF.$dt
+    export FORCING_SCRATCHDIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_DOMAIN%/%WRFHYDRO_CYCLE%/forcings-scratch/$dt
+    mkdir -p $FORCING_INPUTDIR
+    mkdir -p $FORCING_SCRATCHDIR
+    python get_WRF_shortrange.py
+elif [ "%WRFHYDRO_CYCLE%" == "analysis" ]; then
+    export FORCING_INPUTDIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_DOMAIN%/%WRFHYDRO_CYCLE%/forcings-input/WRF.$dt
+    export FORCING_SCRATCHDIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_DOMAIN%/%WRFHYDRO_CYCLE%/forcings-scratch/$dt
+    mkdir -p $FORCING_INPUTDIR
+    mkdir -p $FORCING_SCRATCHDIR
+    python get_WRF_analysis.py
+fi
+
+# set the cycle date/time once more for the rest of the processing chain
+if [ "%RUN_MODE%" == "realtime" ]; then
+    ecflow_client --alter=change variable CYCLE_DATE "$cycle_date" /%SUITE%/%WRFHYDRO_CYCLE%
+    ecflow_client --alter=change variable CYCLE_TIME "$cycle_time" /%SUITE%/%WRFHYDRO_CYCLE%
+fi
+
 %include <tail.h>
 %manual
 %end

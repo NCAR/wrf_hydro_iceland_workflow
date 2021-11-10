@@ -6,14 +6,19 @@ suite wrf_hydro_iceland
   edit ECF_INCLUDE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/include'
   edit PROJ 'p48500028'
   edit QUEUE 'regular'
+  edit RUN_MODE 'realtime'
   edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir'
   family analysis
     edit CYCLE_DATE '20211009'
     edit CYCLE_TIME '0000'
+    edit LATENCY '2'
+    time 00:00 23:00 01:00
+    date *.*.*
     family data_pull
       edit WRFHYDRO_CYCLE 'analysis'
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
+        edit LENGTH_HRS '-3'
         task data_pull
       endfamily
     endfamily
@@ -22,14 +27,11 @@ suite wrf_hydro_iceland
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit FORCING_CONFIGS_DIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/forcings/config'
-        edit FORCING_PARAMS_DIR '/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/AnA'
-        edit FORCING_INPUT_DIR '/glade/p/ral/allral/zhangyx/RAP_Conus, /glade/p/ral/allral/zhangyx/HRRR_Conus/'
-        edit GEOGRID_FILE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/iceland/DOMAIN/geo_em.d04.nc'
-        edit SPATIAL_METADATA_FILE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflowwrfhydro/iceland/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata.nc'
+        edit FORCING_DIR '/glade/u/home/gaydos/git/WrfHydroForcing'
         edit LENGTH_HRS '-3'
         edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
+          trigger ../../data_pull/iceland/data_pull == complete
       endfamily
     endfamily
     family wrfhydro_model
@@ -63,10 +65,14 @@ suite wrf_hydro_iceland
   family shortrange
     edit CYCLE_DATE '20211009'
     edit CYCLE_TIME '0000'
+    edit LATENCY '8'
+    time 02:00 20:00 06:00
+    date *.*.*
     family data_pull
       edit WRFHYDRO_CYCLE 'shortrange'
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
+        edit LENGTH_HRS '24'
         task data_pull
       endfamily
     endfamily
@@ -75,14 +81,11 @@ suite wrf_hydro_iceland
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit FORCING_CONFIGS_DIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/forcings/config'
-        edit FORCING_PARAMS_DIR '/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/Short_Range'
-        edit FORCING_INPUT_DIR '/glade/p/ral/allral/zhangyx/RAP_Conus, /glade/p/ral/allral/zhangyx/HRRR_Conus/'
-        edit GEOGRID_FILE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/iceland/DOMAIN/geo_em.d04.nc'
-        edit SPATIAL_METADATA_FILE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflowwrfhydro/iceland/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata.nc'
-        edit LENGTH_HRS '18'
+        edit FORCING_DIR '/glade/u/home/gaydos/git/WrfHydroForcing'
+        edit LENGTH_HRS '24'
         edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
+          trigger ../../data_pull/iceland/data_pull == complete
       endfamily
     endfamily
     family wrfhydro_model
@@ -96,7 +99,7 @@ suite wrf_hydro_iceland
         trigger ../../analysis/wrfhydro_model/iceland/wrfhydro_model == complete
         edit WRFHYDRO_DOMAIN 'iceland'
         edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
-        edit LENGTH_HRS '18'
+        edit LENGTH_HRS '24'
         task wrfhydro_model
           trigger ../../../shortrange/forcings/iceland/wrfhydro_forcings == complete
       endfamily
@@ -109,7 +112,7 @@ suite wrf_hydro_iceland
         trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
         edit WRFHYDRO_DOMAIN 'iceland'
         edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
-        edit LENGTH_HRS '18'
+        edit LENGTH_HRS '24'
         task data_push
       endfamily
     endfamily
@@ -117,10 +120,14 @@ suite wrf_hydro_iceland
   family mediumrange
     edit CYCLE_DATE '20211009'
     edit CYCLE_TIME '0000'
+    edit LATENCY '8'
+    time 02:00 20:00 06:00
+    date *.*.*
     family data_pull
       edit WRFHYDRO_CYCLE 'mediumrange'
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
+        edit LENGTH_HRS '240'
         task data_pull
       endfamily
     endfamily
@@ -129,14 +136,11 @@ suite wrf_hydro_iceland
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit FORCING_CONFIGS_DIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/forcings/config'
-        edit FORCING_PARAMS_DIR '/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/Medium_Range'
-        edit FORCING_INPUT_DIR '/glade/p/ral/allral/zhangyx/RAP_Conus, /glade/p/ral/allral/zhangyx/HRRR_Conus/'
-        edit GEOGRID_FILE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/iceland/DOMAIN/geo_em.d04.nc'
-        edit SPATIAL_METADATA_FILE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflowwrfhydro/iceland/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata.nc'
+        edit FORCING_DIR '/glade/u/home/gaydos/git/WrfHydroForcing'
         edit LENGTH_HRS '240'
         edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
+          trigger ../../data_pull/iceland/data_pull == complete
       endfamily
     endfamily
     family wrfhydro_model
@@ -171,10 +175,14 @@ suite wrf_hydro_iceland
   family longrange
     edit CYCLE_DATE '20211009'
     edit CYCLE_TIME '0000'
+    edit LATENCY '8'
+    time 02:00 20:00 06:00
+    date *.*.*
     family data_pull
       edit WRFHYDRO_CYCLE 'longrange'
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
+        edit LENGTH_HRS '720'
         task data_pull
       endfamily
     endfamily
@@ -183,14 +191,11 @@ suite wrf_hydro_iceland
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit FORCING_CONFIGS_DIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/forcings/config'
-        edit FORCING_PARAMS_DIR '/glade/p/cisl/nwc/nwm_forcings/NWM_v21_Params/Long_Range'
-        edit FORCING_INPUT_DIR '/glade/p/ral/allral/zhangyx/RAP_Conus, /glade/p/ral/allral/zhangyx/HRRR_Conus/'
-        edit GEOGRID_FILE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/iceland/DOMAIN/geo_em.d04.nc'
-        edit SPATIAL_METADATA_FILE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflowwrfhydro/iceland/DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata.nc'
+        edit FORCING_DIR '/glade/u/home/gaydos/git/WrfHydroForcing'
         edit LENGTH_HRS '720'
         edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
         task wrfhydro_forcings
+          trigger ../../data_pull/iceland/data_pull == complete
       endfamily
     endfamily
     family wrfhydro_model

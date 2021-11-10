@@ -1,18 +1,14 @@
 %include <head.h>
 echo "=== STARTING WRFHYDRO MODEL %WRFHYDRO_CYCLE% ==="
 
+dt=`date -u +%%Y%%m%%d%%H%%M%%S`
+echo "$dt: Running the %WRFHYDRO_CYCLE% model for time %CYCLE_DATE% %CYCLE_TIME%" >> /glade/u/home/gaydos/iceland.log
+
 export WRF_HYDRO_ROOT=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/wrfhydro
 mkdir -p $WRF_HYDRO_ROOT
 
-
-if [[ %LENGTH_HRS% < 0 ]]; then
-    cycle_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +%LENGTH_HRS% hours" +%%Y%%m%%d)
-    cycle_time=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +%LENGTH_HRS% hours" +%%H%%M)
-else
-    cycle_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d)
-    cycle_time=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%H%%M)
-fi
-
+cycle_date=%CYCLE_DATE%
+cycle_time=%CYCLE_TIME%
 cp %ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/params/* $WRF_HYDRO_ROOT
 cp %ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/namelists/%WRFHYDRO_CYCLE%/* $WRF_HYDRO_ROOT
 ln -sf %ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/DOMAIN $WRF_HYDRO_ROOT
@@ -33,6 +29,14 @@ fi
 hydro_namelist=$WRF_HYDRO_ROOT/hydro.namelist
 hrldas_namelist=$WRF_HYDRO_ROOT/namelist.hrldas
 
+if [[ %LENGTH_HRS% < 0 ]]; then
+    cycle_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +%LENGTH_HRS% hours" +%%Y%%m%%d)
+    cycle_time=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +%LENGTH_HRS% hours" +%%H%%M)
+else
+    cycle_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d)
+    cycle_time=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%H%%M)
+fi
+
 start_date=$cycle_date
 start_year=${start_date:0:4}
 start_month=${start_date:4:2}
@@ -48,20 +52,23 @@ sed -i "s|^START_DAY .*|START_DAY = ${start_day}|;" ${hrldas_namelist}
 sed -i "s|^START_HOUR .*|START_HOUR = ${start_hour}|;" ${hrldas_namelist}
 sed -i "s|^START_MIN .*|START_MIN = ${start_minute}|;" ${hrldas_namelist}
 
-hrldas_restart=RESTART.${start_year}${start_month}${start_day}${start_hour}_DOMAIN4
-hydro_restart=HYDRO_RST.${start_year}-${start_month}-${start_day}_${start_hour}\:00_DOMAIN4
+# variables for python restart-finding script
+export WRFHYDRO_JOBDIR=%WRFHYDRO_JOBDIR%
+export WRFHYDRO_CYCLE=%WRFHYDRO_CYCLE%
+export WRFHYDRO_DOMAIN=%WRFHYDRO_DOMAIN%
+export ECF_HOME=%ECF_HOME%
 
-if [[ "%WRFHYDRO_RESTART_CYCLE%" != "" ]]; then
-    cp %ECF_HOME%/jobdir/%WRFHYDRO_DOMAIN%/%WRFHYDRO_RESTART_CYCLE%/wrfhydro/$hrldas_restart $WRF_HYDRO_ROOT
-    cp %ECF_HOME%/jobdir/%WRFHYDRO_DOMAIN%/%WRFHYDRO_RESTART_CYCLE%/wrfhydro/$hydro_restart $WRF_HYDRO_ROOT
+hrldas_restart=`python %ECF_HOME%/wrfhydro/getBestRestart.py hrldas $cycle_date $cycle_time %WRFHYDRO_RESTART_CYCLE%`
+hydro_restart=`python %ECF_HOME%/wrfhydro/getBestRestart.py hydro $cycle_date $cycle_time %WRFHYDRO_RESTART_CYCLE%`
+
+cd $WRF_HYDRO_ROOT
+
+if [ ! -e `basename $hrldas_restart` ]; then
+    ln -fs $hrldas_restart .
 fi
-
-sed -i "s|^RESTART_FILE .*|RESTART_FILE = ${hydro_restart}|;" ${hydro_namelist}
-sed -i "s|^RESTART_FILENAME_REQUESTED .*|RESTART_FILENAME_REQUESTED = ${hrldas_restart}|;" ${hrldas_namelist}
-
-# Uncomment these and comment out two lines above for model cold start
-#sed -i "s|^RESTART_FILE .*|\!RESTART_FILE = ${hydro_restart}|;" ${hydro_namelist}
-#sed -i "s|^RESTART_FILENAME_REQUESTED .*|\!RESTART_FILENAME_REQUESTED = ${hrldas_restart}|;" ${hrldas_namelist}
+if [ ! -e `basename $hydro_restart` ]; then
+    ln -fs $hydro_restart .
+fi
 
 ## change output type to 6 until short-range is updated to include q_lateral
 sed -i "s|^io_config_outputs = .*|io_config_outputs = 6|;" ${hydro_namelist}
@@ -78,6 +85,7 @@ qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l walltime=03:00:00 
 # copy output to dated directory
 
 output_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d%%H)
+
 export OUTPUT_ROOT=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/model-output/$output_date
 mkdir -p $OUTPUT_ROOT
 
