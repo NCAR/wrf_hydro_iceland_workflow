@@ -13,3 +13,7 @@ module load netcdf/4.6.3
 
 source ${FORCING_PYTHON_VENV:-/glade/p/cisl/nwc/rcabell/mfe_venv}/bin/activate
 mpiexec python3 -E $FORCING_ROOT_DIR/genForcing.py $FORCING_CONFIG 1.0 $FORCING_CYCLE 
+
+if [ $? != 0 ]; then
+    exit -1
+fi

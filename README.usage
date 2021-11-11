@@ -1,0 +1,38 @@
+WRFHydro-Iceland workflow usage notes
+-------------------------------------
+
+- Workflow is set up for realtime cycling. To turn this off, set RUN_MODE in
+  build_defs_iceland.py to 'archive' and rebuild/reload the defs
+
+- the data pull task sets up the current cycle being processed (e.g. 0z, 6z, 12z)
+  based on the (clock time - LATENCY) when in realtime mode. To override this behavior,
+  use ecflow_ui to set the following variables on the data pull task:
+
+    RESTART (set to 'archive')
+    CYCLE_DATE (YYYYMMDD)
+    CYCLE_TIME (HHMM)
+
+  then, when the data_pull node is manually executed, it will process CYCLE_DATE/CYCLE_TIME
+  without factoring in LATENCY
+
+- the other task families (forcings, model, and data push) can be run for a desired time
+  by setting the CYCLE_DATE/CYCLE_TIME for that node appropriately (don't need to change
+  RUN_MODE for this)
+
+- nodes that fail are NOT automatically restarted/retriggered at the next cycle time in
+  the workflow. This will need to be reset manually, or by adding a task to check/restart
+  failed nodes periodically in the workflow.
+
+- data and logs are NOT currently managed - their size on disk will grow indefinitely over time.
+  A workflow or other task will need to be added to manage old files and disk usage.
+  All such files will be contained in WRFHYDRO_JOBDIR (as defined in build_defs_iceland.py)
+
+  In particular, files to watch are in:
+
+     WRFHYDRO_JOBDIR/iceland/WRFHYDRO_CYCLE/model-output
+     WRFHYDRO_JOBDIR/iceland/WRFHYDRO_CYCLE/forcings-output
+     WRFHYDRO_JOBDIR/iceland/WRFHYDRO_CYCLE/forcings-input
+     WRFHYDRO_JOBDIR/iceland/WRFHYDRO_CYCLE/forcings-scratch
+
+
+

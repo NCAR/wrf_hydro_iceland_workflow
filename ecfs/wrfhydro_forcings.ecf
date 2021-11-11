@@ -3,6 +3,8 @@
 dt=`date -u +%%Y%%m%%d%%H%%M%%S`
 echo "$dt: Running the %WRFHYDRO_CYCLE% forcings for time %CYCLE_DATE% %CYCLE_TIME%" >> /glade/u/home/gaydos/iceland.log
 
+export WGRIB2=%WGRIB2_EXE%
+
 export FORCING_ROOT_DIR=%FORCING_DIR%
 export FORCING_CYCLE=%WRFHYDRO_CYCLE%
 export FORCING_SCRATCH_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-scratch
@@ -10,7 +12,6 @@ export FORCING_OUTPUT_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-output
 export FORCING_INPUT_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-input
 
 export DOMAIN=%ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/DOMAIN
-export WEIGHTS=%ECF_HOME%/forcings/ESMFWeightFiles
 
 hrs=%LENGTH_HRS%
 if [ "$hrs" -lt "0" ]; then 
@@ -33,7 +34,6 @@ sed -i "s|__DOMAIN__|${DOMAIN}|;" ${FORCING_CONFIG}
 sed -i "s|__INDIR__|${FORCING_INPUT_DIR}|;" ${FORCING_CONFIG}
 sed -i "s|__OUTDIR__|${FORCING_OUTPUT_DIR}|;" ${FORCING_CONFIG}
 sed -i "s|__SCRATCHDIR__|${FORCING_SCRATCH_DIR}|;" ${FORCING_CONFIG}
-sed -i "s|__WEIGHTSDIR__|${WEIGHTS}|;" ${FORCING_CONFIG}
 sed -i "s|__LENGTH__|${FORCING_LENGTH_MINS}|;" ${FORCING_CONFIG}
 
 

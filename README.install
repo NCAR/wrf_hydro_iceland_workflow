@@ -5,14 +5,24 @@ Requirements:
     
     ecflow and ecflow-python
     wrhydro executable
-    Iceland model domain files
+    Forcing Engine
+    wgrib2 executable
+    bash
+    ksh
     
 
-1) set TOP_DIR = root of the wrf_hydro_iceland_workflow repository in 'build_defs_iceland.py'
-2) Create a symlink 'jobdir' in $TOP_DIR to point to a data directory with sufficient space
-   for storing all forcings and output datafiles.
-3) Compile WRF-Hydro and copy the executable to $TOP_DIR/wrfhydro/wrf_hydro_NoahMP.exe
-4) Copy Iceland domain files to $TOP_DIR/wrfhydro/iceland/DOMAIN
-5) Install and run a local ecflow server (see ECFLOW documentation)
-6) build the suite definitions by executing build_defs_iceland.py
-7) upload the definition to the running ecflow server and start it using reload_suite.py
+1) Install and run a local ecflow server (see ECFLOW documentation)
+2) Set up configuration in build_defs_iceland.py. In particular:
+
+    TOP_DIR          - the root workflow directory (e.g. git/wrf_hydro_iceland_workflow)
+    WRFHYDRO_JOBDIR  - the root directory where data will be downloaded, processed, and output
+    MODEL_EXE        - the path to the WRF-Hydro model executable
+    WGRIB2_EXE       - the path to wgrib2 executable (needed for the forcing engine)
+    FORCING_DIR      - the root directory of the forcing engine (e.g. git/WrfHydroForcing)
+
+3) build the suite definitions by executing build_defs_iceland.py.
+4) upload the definition to the running ecflow server and start it using reload_suite.py.
+   * Note steps 3 & 4 will need to be repeated any time the workflow definitions or configuration
+   is changed in build_defs_iceland.py
+
+

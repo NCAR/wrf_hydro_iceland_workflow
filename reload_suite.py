@@ -9,8 +9,8 @@ try:
         pass
     ci.load("defs/iceland.def")       # load the definition into the server
     
-    #ci.begin_suite("wrf_hydro_iceland")    # start the suite
-    ci.suspend("wrf_hydro_iceland")
+    ci.begin_suite("wrf_hydro_iceland")    # start the suite
+    #ci.suspend("wrf_hydro_iceland")
     print("Complete")
 except RuntimeError as e:
     print("Failed:", e)

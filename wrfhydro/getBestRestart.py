@@ -16,9 +16,6 @@ restart_cycle = sys.argv[4] if len(sys.argv) == 5 else CYCLE
 
 tm = datetime.strptime("%s%s" % (cycle_date, cycle_time), "%Y%m%d%H%M")
 
-# hrldas_restart=`python $ECF_HOME/wrfhydro/getBestRestart.py hrldas $cycle_date $cycle_time $WRFHYDRO_RESTART_CYCLE`
-# RESTART.2010060100_DOMAIN4 HYDRO_RST.2010-06-01_00:00_DOMAIN1
-
 indir = "%s/%s/wrfhydro" % (JOBDIR, restart_cycle)
 
 default_restart_dir = "%s/wrfhydro/%s/restarts" % (ECF_HOME, DOMAIN)

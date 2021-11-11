@@ -7,32 +7,47 @@ from ecflow import Defs, Suite, Family, Task, Edit, Trigger, Time, Date
 from os.path import join
 import os
 
+# default run time
 ICELAND_PARAMS = {'CYCLE_DATE': '20211009', 'CYCLE_TIME': '0000'}
 
 # realtime or archive
 RUN_MODE = "realtime"
 
 TOP_DIR = os.environ['HOME'] + '/git/wrf_hydro_iceland_workflow'
-FORCING_DIR = os.environ['HOME'] + '/git/WrfHydroForcing'
 ECFLOW_DIR = TOP_DIR
 
+# path to data directory
 WRFHYDRO_JOBDIR = ECFLOW_DIR + '/jobdir'
+# path to WRFHydro executable
 MODEL_EXE = ECFLOW_DIR + "/wrfhydro/wrf_hydro_NoahMP.exe"
+# path to WGRIB2 executable
+WGRIB2_EXE = ECFLOW_DIR + "/forcings/wgrib2"
+# path to forcing engine root
+FORCING_DIR = os.environ['HOME'] + '/git/WrfHydroForcing'
 
+
+# configure cycle lengths (hours) here
+# NOTE analysis lookback is currently hard-coded
+# in the forcing engine.
 DOMAINS = {
     'iceland': {
         'name': "ICELAND",
         'cycle_length': {
             'analysis': -3,
-            'shortrange': 24,
+            'shortrange': 72,
             'mediumrange': 240,
             'longrange': 720
         }
     }
 }
 
+# path to data display/archive host
 HYDROINSPECTOR_HOST = "hydro-c1-content.rap.ucar.edu"
 HYDROINSPECTOR_DIR = "/d5/hydroinspector_data/tmp/iceland"
+
+# set to False to skip pushing model/FE output data
+# to another host
+PUSH_DATA = True
 
 
 ############### Forcing families ##############################
@@ -46,6 +61,7 @@ def create_forcings_family(cycle,member=None):
     """
     forcings_family = Family("forcings", Edit(WRFHYDRO_CYCLE=cycle, WRFHYDRO_ENSEMBLE_MEM="" if not member else member))
     wrfhydro_cycle = cycle if member is None else f"{cycle}_mem{member}"
+    forcings_family += Edit(WGRIB2_EXE=WGRIB2_EXE)
 
     for domain in DOMAINS:
         if wrfhydro_cycle not in DOMAINS[domain]['cycle_length']:
@@ -126,6 +142,8 @@ def create_model_family(cycle,useda=True,requiresCycle=None, restartCycle=None,
 
 def create_data_pull_family(cycle):
     """
+    Create a family of tasks for pulling raw data from various sources for
+    input to the Forcing Engine
     """
     data_pull_family = Family("data_pull")
     data_pull_family += Edit(WRFHYDRO_CYCLE=cycle)
@@ -146,11 +164,11 @@ def create_data_pull_family(cycle):
         data_pull_family += domain_family
 
     return data_pull_family
-    
 
 
 def create_data_push_family(cycle, member=None):
     """
+    Create a family of tasks to push output data to a display/archive host
     """
     wrfhydro_cycle = cycle if member is None else f"{cycle}_mem{member}"
 
@@ -183,23 +201,30 @@ def create_data_push_family(cycle, member=None):
 
 def create_suite():
     """
-    Create the suite definition for all model cycles
+    Create the suite definition for all model configurations 
     """
 
     params = ICELAND_PARAMS
 
     analysis = Family("analysis", Edit(**params),create_data_pull_family("analysis"), create_forcings_family("analysis"),
-            create_model_family("analysis", useda=False), create_data_push_family("analysis"))
+            create_model_family("analysis", useda=False))
     shortrange = Family("shortrange", Edit(**params),create_data_pull_family("shortrange"), create_forcings_family("shortrange"),
-                 create_model_family("shortrange", requiresCycle="analysis", restartCycle="analysis", useda=False), 
-                 create_data_push_family("shortrange"))
+                 create_model_family("shortrange", restartCycle="analysis", useda=False)) 
     mediumrange = Family("mediumrange", Edit(**params),create_data_pull_family("mediumrange"), create_forcings_family("mediumrange"),
-                 create_model_family("mediumrange", requiresCycle="analysis", restartCycle="analysis", useda=False), 
-                 create_data_push_family("mediumrange"))
+                 create_model_family("mediumrange", restartCycle="analysis", useda=False)) 
     longrange = Family("longrange", Edit(**params),create_data_pull_family("longrange"), create_forcings_family("longrange"),
-                 create_model_family("longrange", requiresCycle="analysis", restartCycle="analysis", useda=False),
-                 create_data_push_family("longrange"))
+                 create_model_family("longrange", restartCycle="analysis", useda=False))
 
+    if PUSH_DATA:
+        analysis += create_data_push_family("analysis")
+        shortrange += create_data_push_family("shortrange")
+        mediumrange += create_data_push_family("mediumrange")
+        longrange += create_data_push_family("longrange")
+
+    # these schedule trigger times for each model configuration.
+    # At run time, the system will process the run time of T-LATENCY (hours)
+    # This is to prevent tasks from stacking up waiting for data to come in.
+    # e.g. at 20z the short range configuration will process (20-8) the 12z cycle
     if RUN_MODE == "realtime":
         analysis += Time("00:00 23:00 01:00") 
         analysis += Date("*.*.*")

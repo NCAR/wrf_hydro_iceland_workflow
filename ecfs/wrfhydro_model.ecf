@@ -29,9 +29,11 @@ fi
 hydro_namelist=$WRF_HYDRO_ROOT/hydro.namelist
 hrldas_namelist=$WRF_HYDRO_ROOT/namelist.hrldas
 
+khour=%LENGTH_HRS%
 if [[ %LENGTH_HRS% < 0 ]]; then
     cycle_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +%LENGTH_HRS% hours" +%%Y%%m%%d)
     cycle_time=$(date -ud "%CYCLE_DATE% %CYCLE_TIME% +%LENGTH_HRS% hours" +%%H%%M)
+    let khour=$khour*-1
 else
     cycle_date=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%Y%%m%%d)
     cycle_time=$(date -ud "%CYCLE_DATE% %CYCLE_TIME%" +%%H%%M)
@@ -51,6 +53,7 @@ sed -i "s|^START_MONTH .*|START_MONTH = ${start_month}|;" ${hrldas_namelist}
 sed -i "s|^START_DAY .*|START_DAY = ${start_day}|;" ${hrldas_namelist}
 sed -i "s|^START_HOUR .*|START_HOUR = ${start_hour}|;" ${hrldas_namelist}
 sed -i "s|^START_MIN .*|START_MIN = ${start_minute}|;" ${hrldas_namelist}
+sed -i "s|^KHOUR .*|KHOUR = ${khour}|;" ${hrldas_namelist}
 
 # variables for python restart-finding script
 export WRFHYDRO_JOBDIR=%WRFHYDRO_JOBDIR%
@@ -63,17 +66,15 @@ hydro_restart=`python %ECF_HOME%/wrfhydro/getBestRestart.py hydro $cycle_date $c
 
 cd $WRF_HYDRO_ROOT
 
-if [ ! -e `basename $hrldas_restart` ]; then
-    ln -fs $hrldas_restart .
-fi
-if [ ! -e `basename $hydro_restart` ]; then
-    ln -fs $hydro_restart .
-fi
+ln -fs $hrldas_restart HRLDAS.RESTART
+ln -fs $hydro_restart HYDRO.RESTART
+
+sed -i "s|^RESTART_FILE .*|RESTART_FILE = \"./HYDRO.RESTART\"|;" ${hydro_namelist}
+sed -i "s|^RESTART_FILENAME_REQUESTED .*|RESTART_FILENAME_REQUESTED = \"./HRLDAS.RESTART\"|;" ${hrldas_namelist}
 
 ## change output type to 6 until short-range is updated to include q_lateral
 sed -i "s|^io_config_outputs = .*|io_config_outputs = 6|;" ${hydro_namelist}
 
-cd $WRF_HYDRO_ROOT
 
 # call the model!
 ########################### NOTE this command may need to be modified depending on the #################################
