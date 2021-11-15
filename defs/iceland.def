@@ -50,18 +50,6 @@ suite wrf_hydro_iceland
           trigger ../../../analysis/forcings/iceland/wrfhydro_forcings == complete
       endfamily
     endfamily
-    family data_push
-      edit WRFHYDRO_CYCLE 'analysis'
-      edit HYDROINSPECTOR_HOST 'hydro-c1-content.rap.ucar.edu'
-      edit HYDROINSPECTOR_DIR '/d5/hydroinspector_data/tmp/iceland'
-      family iceland
-        trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
-        edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
-        edit LENGTH_HRS '-3'
-        task data_push
-      endfamily
-    endfamily
   endfamily
   family shortrange
     edit CYCLE_DATE '20211009'
@@ -103,18 +91,6 @@ suite wrf_hydro_iceland
         edit LENGTH_HRS '72'
         task wrfhydro_model
           trigger ../../../shortrange/forcings/iceland/wrfhydro_forcings == complete
-      endfamily
-    endfamily
-    family data_push
-      edit WRFHYDRO_CYCLE 'shortrange'
-      edit HYDROINSPECTOR_HOST 'hydro-c1-content.rap.ucar.edu'
-      edit HYDROINSPECTOR_DIR '/d5/hydroinspector_data/tmp/iceland'
-      family iceland
-        trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
-        edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
-        edit LENGTH_HRS '72'
-        task data_push
       endfamily
     endfamily
   endfamily
@@ -160,18 +136,6 @@ suite wrf_hydro_iceland
           trigger ../../../mediumrange/forcings/iceland/wrfhydro_forcings == complete
       endfamily
     endfamily
-    family data_push
-      edit WRFHYDRO_CYCLE 'mediumrange'
-      edit HYDROINSPECTOR_HOST 'hydro-c1-content.rap.ucar.edu'
-      edit HYDROINSPECTOR_DIR '/d5/hydroinspector_data/tmp/iceland'
-      family iceland
-        trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
-        edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
-        edit LENGTH_HRS '240'
-        task data_push
-      endfamily
-    endfamily
   endfamily
   family longrange
     edit CYCLE_DATE '20211009'
@@ -213,18 +177,6 @@ suite wrf_hydro_iceland
         edit LENGTH_HRS '720'
         task wrfhydro_model
           trigger ../../../longrange/forcings/iceland/wrfhydro_forcings == complete
-      endfamily
-    endfamily
-    family data_push
-      edit WRFHYDRO_CYCLE 'longrange'
-      edit HYDROINSPECTOR_HOST 'hydro-c1-content.rap.ucar.edu'
-      edit HYDROINSPECTOR_DIR '/d5/hydroinspector_data/tmp/iceland'
-      family iceland
-        trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
-        edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
-        edit LENGTH_HRS '720'
-        task data_push
       endfamily
     endfamily
   endfamily

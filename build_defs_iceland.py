@@ -42,8 +42,8 @@ DOMAINS = {
 }
 
 # path to data display/archive host
-HYDROINSPECTOR_HOST = "hydro-c1-content.rap.ucar.edu"
-HYDROINSPECTOR_DIR = "/d5/hydroinspector_data/tmp/iceland"
+DATA_HOST = "hydro-c1-content.rap.ucar.edu"
+DATAHOST_DIR = "/d5/hydroinspector_data/tmp/iceland"
 
 # set to False to skip pushing model/FE output data
 # to another host
@@ -173,8 +173,8 @@ def create_data_push_family(cycle, member=None):
     wrfhydro_cycle = cycle if member is None else f"{cycle}_mem{member}"
 
     data_push_family = Family("data_push")
-    data_push_family += Edit(WRFHYDRO_CYCLE=wrfhydro_cycle,HYDROINSPECTOR_HOST=HYDROINSPECTOR_HOST,
-        HYDROINSPECTOR_DIR=HYDROINSPECTOR_DIR)
+    data_push_family += Edit(WRFHYDRO_CYCLE=wrfhydro_cycle,DATA_HOST=DATA_HOST,
+        DATAHOST_DIR=DATAHOST_DIR)
 
     for domain in DOMAINS:
         if wrfhydro_cycle not in DOMAINS[domain]['cycle_length']:

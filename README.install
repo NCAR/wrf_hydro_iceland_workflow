@@ -9,7 +9,18 @@ Requirements:
     wgrib2 executable
     bash
     ksh
+    mpiexe
+    PBS **
+
+** Note the workflow is set up to use the PBS scheduler, which submits jobs using qsub.
+   If a different scheduler is to be used (or no scheduler at all) modify the following
+   ecf scripts:
+
+      ecfs/wrfhydro_forcings.ecf
+      ecfs/wrfhydro_model.ecf
     
+   (code lines to modify are highlighted in each script)
+
 
 1) Install and run a local ecflow server (see ECFLOW documentation)
 2) Set up configuration in build_defs_iceland.py. In particular:
@@ -19,6 +30,8 @@ Requirements:
     MODEL_EXE        - the path to the WRF-Hydro model executable
     WGRIB2_EXE       - the path to wgrib2 executable (needed for the forcing engine)
     FORCING_DIR      - the root directory of the forcing engine (e.g. git/WrfHydroForcing)
+    PUSH_DATA        - if True, push output data to another host. If set, DATA_HOST and
+                       DATAHOST_DIR also need to be set appropriately 
 
 3) build the suite definitions by executing build_defs_iceland.py.
 4) upload the definition to the running ecflow server and start it using reload_suite.py.

@@ -14,15 +14,15 @@ for i in LDASOUT RTOUT LAKEOUT CHRTOUT_GRID
 do
     for file in `ls -1 *.$i*`
     do
-        out=%HYDROINSPECTOR_DIR%/%WRFHYDRO_CYCLE%/$cycle_date$cycle_hour
+        out=%DATAHOST_DIR%/%WRFHYDRO_CYCLE%/$cycle_date$cycle_hour
 
-        cmd="ssh %HYDROINSPECTOR_HOST% mkdir -p $out"
+        cmd="ssh %DATA_HOST% mkdir -p $out"
         echo $cmd
         $cmd
-        cmd="scp $file %HYDROINSPECTOR_HOST%:$out/$file"
+        cmd="scp $file %DATA_HOST%:$out/$file"
         echo $cmd
         $cmd
-        cmd="ssh %HYDROINSPECTOR_HOST% chmod -R g+w $out"
+        cmd="ssh %DATA_HOST% chmod -R g+w $out"
         echo $cmd
         $cmd
     done
@@ -37,15 +37,15 @@ for i in LDASIN
 do
     for file in `ls -1 *.$i*`
     do
-        out=%HYDROINSPECTOR_DIR%/%WRFHYDRO_CYCLE%/$cycle_date$cycle_hour
+        out=%DATAHOST_DIR%/%WRFHYDRO_CYCLE%/$cycle_date$cycle_hour
 
-        cmd="ssh %HYDROINSPECTOR_HOST% mkdir -p $out"
+        cmd="ssh %DATA_HOST% mkdir -p $out"
         echo $cmd
         $cmd
-        cmd="scp $file %HYDROINSPECTOR_HOST%:$out/$file"
+        cmd="scp $file %DATA_HOST%:$out/$file"
         echo $cmd
         $cmd
-        cmd="ssh %HYDROINSPECTOR_HOST% chmod -R g+w $out"
+        cmd="ssh %DATA_HOST% chmod -R g+w $out"
         echo $cmd
         $cmd
     done
@@ -53,5 +53,5 @@ done
 
 %include <tail.h>
 %manual
-This process pushes select model output and forcing files to HydroInspector for display
+This process pushes select model output and forcing files to a display/archive host
 %end
