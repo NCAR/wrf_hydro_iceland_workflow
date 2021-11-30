@@ -22,9 +22,6 @@ do
         cmd="scp $file %DATA_HOST%:$out/$file"
         echo $cmd
         $cmd
-        cmd="ssh %DATA_HOST% chmod -R g+w $out"
-        echo $cmd
-        $cmd
     done
 done
 
@@ -43,9 +40,6 @@ do
         echo $cmd
         $cmd
         cmd="scp $file %DATA_HOST%:$out/$file"
-        echo $cmd
-        $cmd
-        cmd="ssh %DATA_HOST% chmod -R g+w $out"
         echo $cmd
         $cmd
     done

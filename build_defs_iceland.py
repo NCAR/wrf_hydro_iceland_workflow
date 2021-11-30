@@ -17,11 +17,11 @@ TOP_DIR = os.environ['HOME'] + '/git/wrf_hydro_iceland_workflow'
 ECFLOW_DIR = TOP_DIR
 
 # path to data directory
-WRFHYDRO_JOBDIR = ECFLOW_DIR + '/jobdir'
+WRFHYDRO_JOBDIR = TOP_DIR + '/jobdir'
 # path to WRFHydro executable
-MODEL_EXE = ECFLOW_DIR + "/wrfhydro/wrf_hydro_NoahMP.exe"
+MODEL_EXE = TOP_DIR + "/wrfhydro/wrf_hydro_NoahMP.exe"
 # path to WGRIB2 executable
-WGRIB2_EXE = ECFLOW_DIR + "/forcings/wgrib2"
+WGRIB2_EXE = TOP_DIR + "/forcings/wgrib2"
 # path to forcing engine root
 FORCING_DIR = os.environ['HOME'] + '/git/WrfHydroForcing'
 
@@ -37,6 +37,14 @@ DOMAINS = {
             'shortrange': 72,
             'mediumrange': 240,
             'longrange': 720
+        },
+        # use None to keep all files in a category
+        'data_retention_days': {
+            'forcing_input': 3,
+            'forcing_output': 3,
+            'model_output': 3,
+            'model_restarts': 3,
+            'logs': 3
         }
     }
 }
@@ -49,6 +57,9 @@ DATAHOST_DIR = "/d5/hydroinspector_data/tmp/iceland"
 # to another host
 PUSH_DATA = True
 
+# If true, add a task to delete old files
+DELETE_OLD_FILES = True
+PATH_TO_SCRUB_EXE = TOP_DIR + "/wrfhydro/scrub"
 
 ############### Forcing families ##############################
 
@@ -197,6 +208,36 @@ def create_data_push_family(cycle, member=None):
     return data_push_family
 
 
+def create_janitor_family(cycles):
+    """
+    Create a daily task to clean up old files
+    """
+    janitor_family = Family("janitor",Edit(SCRUB_EXE=PATH_TO_SCRUB_EXE))
+
+    for domain in DOMAINS:
+        domain_family = Family(domain,
+            Edit(WRFHYDRO_DOMAIN=domain, WRFHYDRO_JOBDIR=join(WRFHYDRO_JOBDIR, domain)))
+        
+        for cycle in cycles:
+            cycle_family = Family(cycle, Edit(WRFHYDRO_CYCLE=cycle))
+            cycle_family += Task("janitor",
+                Edit(FORCING_INPUT_RETENTION_DAYS=DOMAINS[domain]['data_retention_days']['forcing_input'],
+                    FORCING_OUTPUT_RETENTION_DAYS=DOMAINS[domain]['data_retention_days']['forcing_output'],
+                    MODEL_OUTPUT_RETENTION_DAYS=DOMAINS[domain]['data_retention_days']['model_output'],
+                    MODEL_RESTARTS_RETENTION_DAYS=DOMAINS[domain]['data_retention_days']['model_restarts'],
+                    LOG_RETENTION_DAYS=DOMAINS[domain]['data_retention_days']['logs']
+                ),
+                Time("00:00"),
+                Date("*.*.*")
+            )
+
+            domain_family += cycle_family
+
+        janitor_family += domain_family
+
+    return janitor_family
+
+
 ###################### Suite definition ################################
 
 def create_suite():
@@ -239,8 +280,7 @@ def create_suite():
         longrange += Date("*.*.*")
         longrange += Edit(LATENCY=8)
 
-    defs = Defs(
-        Suite("wrf_hydro_iceland",
+    suite =  Suite("wrf_hydro_iceland",
           Edit(ECF_HOME=ECFLOW_DIR,
                ECF_SCRIPT=ECFLOW_DIR + '/ecfs',
                ECF_FILES=ECFLOW_DIR + '/ecfs',
@@ -254,7 +294,11 @@ def create_suite():
           mediumrange,
           longrange
         )
-    )
+
+    if DELETE_OLD_FILES is True:
+        suite += create_janitor_family(['analysis','shortrange','mediumrange','longrange'])
+
+    defs = Defs(suite)
 
     print(defs)
 

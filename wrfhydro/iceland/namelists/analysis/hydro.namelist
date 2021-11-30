@@ -20,7 +20,7 @@ HYDROTBL_F = "./DOMAIN/hydro2dtbl.nc"
 LAND_SPATIAL_META_FLNM = "./DOMAIN/GEOGRID_LDASOUT_Spatial_Metadata.nc"
 
 ! Specify the name of the restart file if starting from restart...comment out with '!' if not...
-!RESTART_FILE  = 'HYDRO_RST.2017-10-01_00:00_DOMAIN4'
+RESTART_FILE  = 'HYDRO_RST.2017-10-01_00:00_DOMAIN4'
 
 !!!! --------------------- MODEL SETUP OPTIONS -------------------- !!!!
 
@@ -45,7 +45,7 @@ rst_bi_out = 0      !0: use netcdf output restart file (default)
 RSTRT_SWC = 1
 
 ! Specify baseflow/bucket model initialization...(0=cold start from table, 1=restart file)
-GW_RESTART = 0
+GW_RESTART = 1
 
 !!!! -------------------- MODEL OUTPUT CONTROL -------------------- !!!!
 

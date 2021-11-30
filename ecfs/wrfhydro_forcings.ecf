@@ -12,6 +12,7 @@ export FORCING_OUTPUT_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-output
 export FORCING_INPUT_DIR=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/forcings-input
 
 export DOMAIN=%ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/DOMAIN
+export DOWNSCALING=%ECF_HOME%/wrfhydro/%WRFHYDRO_DOMAIN%/DOWNSCALING
 
 hrs=%LENGTH_HRS%
 if [ "$hrs" -lt "0" ]; then 
@@ -31,6 +32,7 @@ cp %ECF_HOME%/forcings/configs/iceland_forcing_engine-%WRFHYDRO_CYCLE%.config $F
 sed -i "s|__START__|${FORCING_BEGIN_DATE}|;" ${FORCING_CONFIG}
 sed -i "s|__END__|${FORCING_END_DATE}|;" ${FORCING_CONFIG}
 sed -i "s|__DOMAIN__|${DOMAIN}|;" ${FORCING_CONFIG}
+sed -i "s|__DOWNSCALING__|${DOWNSCALING}|;" ${FORCING_CONFIG}
 sed -i "s|__INDIR__|${FORCING_INPUT_DIR}|;" ${FORCING_CONFIG}
 sed -i "s|__OUTDIR__|${FORCING_OUTPUT_DIR}|;" ${FORCING_CONFIG}
 sed -i "s|__SCRATCHDIR__|${FORCING_SCRATCH_DIR}|;" ${FORCING_CONFIG}

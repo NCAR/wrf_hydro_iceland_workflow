@@ -13,7 +13,7 @@ START_MIN   = 00
 
 ! Specification of the land surface model restart file
 ! Comment out the option if not initializing from a restart file
-!RESTART_FILENAME_REQUESTED = "RESTART.2017100100_DOMAIN4"
+RESTART_FILENAME_REQUESTED = "RESTART.2017100100_DOMAIN4"
 
 ! Specification of simulation length in hours OR days
 KHOUR = 3
