@@ -2,7 +2,6 @@
 echo "=== STARTING WRFHYDRO MODEL %WRFHYDRO_CYCLE% ==="
 
 dt=`date -u +%%Y%%m%%d%%H%%M%%S`
-echo "$dt: Running the %WRFHYDRO_CYCLE% model for time %CYCLE_DATE% %CYCLE_TIME%" >> /glade/u/home/gaydos/iceland.log
 
 export WRF_HYDRO_ROOT=%WRFHYDRO_JOBDIR%/%WRFHYDRO_CYCLE%/wrfhydro
 mkdir -p $WRF_HYDRO_ROOT
@@ -66,8 +65,10 @@ hydro_restart=`python %ECF_HOME%/wrfhydro/getBestRestart.py hydro $cycle_date $c
 
 cd $WRF_HYDRO_ROOT
 
-ln -fs $hrldas_restart HRLDAS.RESTART
-ln -fs $hydro_restart HYDRO.RESTART
+cp $hrldas_restart HRLDAS.RESTART
+cp $hydro_restart HYDRO.RESTART
+#ln -fs $hrldas_restart HRLDAS.RESTART
+#ln -fs $hydro_restart HYDRO.RESTART
 
 sed -i "s|^RESTART_FILE .*|RESTART_FILE = \"./HYDRO.RESTART\"|;" ${hydro_namelist}
 sed -i "s|^RESTART_FILENAME_REQUESTED .*|RESTART_FILENAME_REQUESTED = \"./HRLDAS.RESTART\"|;" ${hrldas_namelist}
@@ -75,12 +76,14 @@ sed -i "s|^RESTART_FILENAME_REQUESTED .*|RESTART_FILENAME_REQUESTED = \"./HRLDAS
 ## change output type to 6 until short-range is updated to include q_lateral
 sed -i "s|^io_config_outputs = .*|io_config_outputs = 6|;" ${hydro_namelist}
 
+export WRFHYDRO_NODE=%WRFHYDRO_NODE%
 
 # call the model!
 ########################### NOTE this command may need to be modified depending on the #################################
 ########################### job submission framework being used                        #################################
 
-qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l walltime=03:00:00 %ECF_HOME%/wrfhydro/run_wrf_hydro.sh
+#qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l walltime=03:00:00 %ECF_HOME%/wrfhydro/run_wrf_hydro.sh
+%ECF_HOME%/wrfhydro/run_wrf_hydro.sh
 
 ########################################################################################################################
 # copy output to dated directory

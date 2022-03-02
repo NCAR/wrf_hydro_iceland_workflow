@@ -11,9 +11,11 @@
 # module swap intel gnu/10
 # module load mpt
 
-module load intel/18.0.5
-module load impi/2018.4.274
+#module load intel/18.0.5
+#module load impi/2018.4.274
 
 export MPI_IB_CONGESTED=0
 
-time mpiexec $WRF_HYDRO_ROOT/wrf_hydro.exe
+#time mpiexec $WRF_HYDRO_ROOT/wrf_hydro.exe
+time ssh -tt $WRFHYDRO_NODE "cd $WRF_HYDRO_ROOT; mpiexec -np 32 ./wrf_hydro.exe"
+#time ssh -tt $WRFHYDRO_NODE "cd $WRF_HYDRO_ROOT; ./wrf_hydro.exe"

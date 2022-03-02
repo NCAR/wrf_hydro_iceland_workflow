@@ -16,7 +16,7 @@ export ECF_RID=$$             # record the process id. Also used for zombie dete
 # Define the path where to find ecflow_client
 # make sure client and server use the *same* version.
 # Important when there are multiple versions of ecFlow
-export PATH=/glade/u/apps/ch/opt/ecflow/5.6.0/gnu/9.1.0/bin/ecflow_client:$PATH
+#export PATH=/glade/u/apps/ch/opt/ecflow/5.6.0/gnu/9.1.0/bin/ecflow_client:$PATH
  
 # Tell ecFlow we have started
 ecflow_client --init=$$

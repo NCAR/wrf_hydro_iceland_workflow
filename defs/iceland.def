@@ -1,17 +1,18 @@
-#5.7.0
+#5.8.1
 suite wrf_hydro_iceland
-  edit ECF_HOME '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow'
-  edit ECF_SCRIPT '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/ecfs'
-  edit ECF_FILES '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/ecfs'
-  edit ECF_INCLUDE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/include'
+  edit ECF_HOME '/home/gaydos/iceland'
+  edit ECF_SCRIPT '/home/gaydos/iceland/ecfs'
+  edit ECF_FILES '/home/gaydos/iceland/ecfs'
+  edit ECF_INCLUDE '/home/gaydos/iceland/include'
   edit PROJ 'p48500028'
   edit QUEUE 'regular'
   edit RUN_MODE 'realtime'
-  edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir'
+  edit WRFHYDRO_JOBDIR '/home/gaydos/iceland/jobdir'
   family analysis
     edit CYCLE_DATE '20211009'
     edit CYCLE_TIME '0000'
     edit LATENCY '2'
+    edit WRFHYDRO_NODE 'node01'
     time 00:00 23:00 01:00
     date *.*.*
     family data_pull
@@ -25,12 +26,12 @@ suite wrf_hydro_iceland
     family forcings
       edit WRFHYDRO_CYCLE 'analysis'
       edit WRFHYDRO_ENSEMBLE_MEM ''
-      edit WGRIB2_EXE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/forcings/wgrib2'
+      edit WGRIB2_EXE 'wgrib2'
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit FORCING_DIR '/glade/u/home/gaydos/git/WrfHydroForcing'
+        edit FORCING_DIR '/ymir/wrf-hydro/wrf-hydro-fe/wrfhydroforcing'
         edit LENGTH_HRS '-3'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/home/gaydos/iceland/jobdir/iceland'
         task wrfhydro_forcings
           trigger ../../data_pull/iceland/data_pull == complete
       endfamily
@@ -38,28 +39,16 @@ suite wrf_hydro_iceland
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'analysis'
       edit WRFHYDRO_BASE_CYCLE 'analysis'
-      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/wrf_hydro_NoahMP.exe'
+      edit MODEL_EXECUTABLE '/home/gaydos/iceland/wrfhydro/wrf_hydro_NoahMP.exe'
       edit WRFHYDRO_RESTART_CYCLE ''
       edit USE_DA 'false'
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/home/gaydos/iceland/jobdir/iceland'
         edit LENGTH_HRS '-3'
         task wrfhydro_model
           trigger ../../../analysis/forcings/iceland/wrfhydro_forcings == complete
-      endfamily
-    endfamily
-    family data_push
-      edit WRFHYDRO_CYCLE 'analysis'
-      edit DATA_HOST 'hydro-c1-content.rap.ucar.edu'
-      edit DATAHOST_DIR '/d5/hydroinspector_data/tmp/iceland'
-      family iceland
-        trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
-        edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
-        edit LENGTH_HRS '-3'
-        task data_push
       endfamily
     endfamily
   endfamily
@@ -67,6 +56,7 @@ suite wrf_hydro_iceland
     edit CYCLE_DATE '20211009'
     edit CYCLE_TIME '0000'
     edit LATENCY '8'
+    edit WRFHYDRO_NODE 'node02'
     time 02:00 20:00 06:00
     date *.*.*
     family data_pull
@@ -80,12 +70,12 @@ suite wrf_hydro_iceland
     family forcings
       edit WRFHYDRO_CYCLE 'shortrange'
       edit WRFHYDRO_ENSEMBLE_MEM ''
-      edit WGRIB2_EXE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/forcings/wgrib2'
+      edit WGRIB2_EXE 'wgrib2'
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit FORCING_DIR '/glade/u/home/gaydos/git/WrfHydroForcing'
+        edit FORCING_DIR '/ymir/wrf-hydro/wrf-hydro-fe/wrfhydroforcing'
         edit LENGTH_HRS '72'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/home/gaydos/iceland/jobdir/iceland'
         task wrfhydro_forcings
           trigger ../../data_pull/iceland/data_pull == complete
       endfamily
@@ -93,28 +83,16 @@ suite wrf_hydro_iceland
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'shortrange'
       edit WRFHYDRO_BASE_CYCLE 'shortrange'
-      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/wrf_hydro_NoahMP.exe'
+      edit MODEL_EXECUTABLE '/home/gaydos/iceland/wrfhydro/wrf_hydro_NoahMP.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis'
       edit USE_DA 'false'
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/home/gaydos/iceland/jobdir/iceland'
         edit LENGTH_HRS '72'
         task wrfhydro_model
           trigger ../../../shortrange/forcings/iceland/wrfhydro_forcings == complete
-      endfamily
-    endfamily
-    family data_push
-      edit WRFHYDRO_CYCLE 'shortrange'
-      edit DATA_HOST 'hydro-c1-content.rap.ucar.edu'
-      edit DATAHOST_DIR '/d5/hydroinspector_data/tmp/iceland'
-      family iceland
-        trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
-        edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
-        edit LENGTH_HRS '72'
-        task data_push
       endfamily
     endfamily
   endfamily
@@ -122,6 +100,7 @@ suite wrf_hydro_iceland
     edit CYCLE_DATE '20211009'
     edit CYCLE_TIME '0000'
     edit LATENCY '8'
+    edit WRFHYDRO_NODE 'node03'
     time 02:00 20:00 06:00
     date *.*.*
     family data_pull
@@ -135,12 +114,12 @@ suite wrf_hydro_iceland
     family forcings
       edit WRFHYDRO_CYCLE 'mediumrange'
       edit WRFHYDRO_ENSEMBLE_MEM ''
-      edit WGRIB2_EXE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/forcings/wgrib2'
+      edit WGRIB2_EXE 'wgrib2'
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit FORCING_DIR '/glade/u/home/gaydos/git/WrfHydroForcing'
+        edit FORCING_DIR '/ymir/wrf-hydro/wrf-hydro-fe/wrfhydroforcing'
         edit LENGTH_HRS '240'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/home/gaydos/iceland/jobdir/iceland'
         task wrfhydro_forcings
           trigger ../../data_pull/iceland/data_pull == complete
       endfamily
@@ -148,28 +127,16 @@ suite wrf_hydro_iceland
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'mediumrange'
       edit WRFHYDRO_BASE_CYCLE 'mediumrange'
-      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/wrf_hydro_NoahMP.exe'
+      edit MODEL_EXECUTABLE '/home/gaydos/iceland/wrfhydro/wrf_hydro_NoahMP.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis'
       edit USE_DA 'false'
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/home/gaydos/iceland/jobdir/iceland'
         edit LENGTH_HRS '240'
         task wrfhydro_model
           trigger ../../../mediumrange/forcings/iceland/wrfhydro_forcings == complete
-      endfamily
-    endfamily
-    family data_push
-      edit WRFHYDRO_CYCLE 'mediumrange'
-      edit DATA_HOST 'hydro-c1-content.rap.ucar.edu'
-      edit DATAHOST_DIR '/d5/hydroinspector_data/tmp/iceland'
-      family iceland
-        trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
-        edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
-        edit LENGTH_HRS '240'
-        task data_push
       endfamily
     endfamily
   endfamily
@@ -177,6 +144,7 @@ suite wrf_hydro_iceland
     edit CYCLE_DATE '20211009'
     edit CYCLE_TIME '0000'
     edit LATENCY '8'
+    edit WRFHYDRO_NODE 'node04'
     time 02:00 20:00 06:00
     date *.*.*
     family data_pull
@@ -190,12 +158,12 @@ suite wrf_hydro_iceland
     family forcings
       edit WRFHYDRO_CYCLE 'longrange'
       edit WRFHYDRO_ENSEMBLE_MEM ''
-      edit WGRIB2_EXE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/forcings/wgrib2'
+      edit WGRIB2_EXE 'wgrib2'
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit FORCING_DIR '/glade/u/home/gaydos/git/WrfHydroForcing'
+        edit FORCING_DIR '/ymir/wrf-hydro/wrf-hydro-fe/wrfhydroforcing'
         edit LENGTH_HRS '720'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/home/gaydos/iceland/jobdir/iceland'
         task wrfhydro_forcings
           trigger ../../data_pull/iceland/data_pull == complete
       endfamily
@@ -203,36 +171,24 @@ suite wrf_hydro_iceland
     family wrfhydro_model
       edit WRFHYDRO_CYCLE 'longrange'
       edit WRFHYDRO_BASE_CYCLE 'longrange'
-      edit MODEL_EXECUTABLE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/wrf_hydro_NoahMP.exe'
+      edit MODEL_EXECUTABLE '/home/gaydos/iceland/wrfhydro/wrf_hydro_NoahMP.exe'
       edit WRFHYDRO_RESTART_CYCLE 'analysis'
       edit USE_DA 'false'
       edit WRFHYDRO_ENSEMBLE_MEM ''
       family iceland
         edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+        edit WRFHYDRO_JOBDIR '/home/gaydos/iceland/jobdir/iceland'
         edit LENGTH_HRS '720'
         task wrfhydro_model
           trigger ../../../longrange/forcings/iceland/wrfhydro_forcings == complete
       endfamily
     endfamily
-    family data_push
-      edit WRFHYDRO_CYCLE 'longrange'
-      edit DATA_HOST 'hydro-c1-content.rap.ucar.edu'
-      edit DATAHOST_DIR '/d5/hydroinspector_data/tmp/iceland'
-      family iceland
-        trigger ../wrfhydro_model/iceland/wrfhydro_model == complete
-        edit WRFHYDRO_DOMAIN 'iceland'
-        edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
-        edit LENGTH_HRS '720'
-        task data_push
-      endfamily
-    endfamily
   endfamily
   family janitor
-    edit SCRUB_EXE '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/wrfhydro/scrub'
+    edit SCRUB_EXE '/home/gaydos/iceland/wrfhydro/scrub'
     family iceland
       edit WRFHYDRO_DOMAIN 'iceland'
-      edit WRFHYDRO_JOBDIR '/glade/u/home/gaydos/git/wrf_hydro_iceland_workflow/jobdir/iceland'
+      edit WRFHYDRO_JOBDIR '/home/gaydos/iceland/jobdir/iceland'
       family analysis
         edit WRFHYDRO_CYCLE 'analysis'
         task janitor

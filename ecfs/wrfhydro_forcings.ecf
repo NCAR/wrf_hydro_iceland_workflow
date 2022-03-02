@@ -1,9 +1,8 @@
 %include <head.h>
 
 dt=`date -u +%%Y%%m%%d%%H%%M%%S`
-echo "$dt: Running the %WRFHYDRO_CYCLE% forcings for time %CYCLE_DATE% %CYCLE_TIME%" >> /glade/u/home/gaydos/iceland.log
 
-export WGRIB2=%WGRIB2_EXE%
+#export WGRIB2=%WGRIB2_EXE%
 
 export FORCING_ROOT_DIR=%FORCING_DIR%
 export FORCING_CYCLE=%WRFHYDRO_CYCLE%
@@ -38,11 +37,14 @@ sed -i "s|__OUTDIR__|${FORCING_OUTPUT_DIR}|;" ${FORCING_CONFIG}
 sed -i "s|__SCRATCHDIR__|${FORCING_SCRATCH_DIR}|;" ${FORCING_CONFIG}
 sed -i "s|__LENGTH__|${FORCING_LENGTH_MINS}|;" ${FORCING_CONFIG}
 
+export WRFHYDRO_NODE=%WRFHYDRO_NODE%
 
 ########################### NOTE this command may need to be modified depending on the #################################
 ########################### job submission framework being used                        #################################
 
-qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l select=1:ncpus=36:mpiprocs=36 %ECF_HOME%/forcings/forcings_job.sh
+#qsub -V -A %PROJ% -q %QUEUE% -o %ECF_JOBOUT% -W block=true -l select=1:ncpus=36:mpiprocs=36 %ECF_HOME%/forcings/forcings_job.sh
+%ECF_HOME%/forcings/forcings_job.sh
+
 
 ########################################################################################################################
 

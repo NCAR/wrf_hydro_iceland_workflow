@@ -13,7 +13,7 @@ ICELAND_PARAMS = {'CYCLE_DATE': '20211009', 'CYCLE_TIME': '0000'}
 # realtime or archive
 RUN_MODE = "realtime"
 
-TOP_DIR = os.environ['HOME'] + '/git/wrf_hydro_iceland_workflow'
+TOP_DIR = os.environ['HOME'] + '/iceland'
 ECFLOW_DIR = TOP_DIR
 
 # path to data directory
@@ -21,9 +21,11 @@ WRFHYDRO_JOBDIR = TOP_DIR + '/jobdir'
 # path to WRFHydro executable
 MODEL_EXE = TOP_DIR + "/wrfhydro/wrf_hydro_NoahMP.exe"
 # path to WGRIB2 executable
-WGRIB2_EXE = TOP_DIR + "/forcings/wgrib2"
+#WGRIB2_EXE = TOP_DIR + "/forcings/wgrib2"
+WGRIB2_EXE = "/ymir/wrf-hydro/miniconda3/bin/wgrib2"
 # path to forcing engine root
-FORCING_DIR = os.environ['HOME'] + '/git/WrfHydroForcing'
+#FORCING_DIR = os.environ['HOME'] + '/git/WrfHydroForcing'
+FORCING_DIR = "/ymir/wrf-hydro/wrf-hydro-fe/wrfhydroforcing"
 
 
 # configure cycle lengths (hours) here
@@ -55,7 +57,7 @@ DATAHOST_DIR = "/d5/hydroinspector_data/tmp/iceland"
 
 # set to False to skip pushing model/FE output data
 # to another host
-PUSH_DATA = True
+PUSH_DATA = False
 
 # If true, add a task to delete old files
 DELETE_OLD_FILES = True
@@ -269,16 +271,22 @@ def create_suite():
     if RUN_MODE == "realtime":
         analysis += Time("00:00 23:00 01:00") 
         analysis += Date("*.*.*")
-        analysis += Edit(LATENCY=2)
         shortrange += Time("02:00 20:00 06:00")
         shortrange += Date("*.*.*")
-        shortrange += Edit(LATENCY=8)
         mediumrange += Time("02:00 20:00 06:00")
         mediumrange += Date("*.*.*")
-        mediumrange += Edit(LATENCY=8)
         longrange += Time("02:00 20:00 06:00")
         longrange += Date("*.*.*")
-        longrange += Edit(LATENCY=8)
+
+    analysis += Edit(LATENCY=2)
+    shortrange += Edit(LATENCY=8)
+    mediumrange += Edit(LATENCY=8)
+    longrange += Edit(LATENCY=8)
+
+    analysis += Edit(WRFHYDRO_NODE="node01")
+    shortrange += Edit(WRFHYDRO_NODE="node02")
+    mediumrange += Edit(WRFHYDRO_NODE="node03")
+    longrange += Edit(WRFHYDRO_NODE="node04")
 
     suite =  Suite("wrf_hydro_iceland",
           Edit(ECF_HOME=ECFLOW_DIR,
